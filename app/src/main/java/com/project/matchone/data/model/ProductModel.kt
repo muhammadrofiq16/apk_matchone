@@ -7,12 +7,14 @@ data class ProductModel(
     @SerializedName("category_id") val categoryId: Int,
     @SerializedName("name") val name: String,
     @SerializedName("description") val description: String?,
-    @SerializedName("price") val price: String, // Di JSON adalah String "40000.00"
+    @SerializedName("price") val price: String,
     @SerializedName("image") val image: String?,
-    @SerializedName("is_available") val isAvailable: Boolean? // Sesuai JSON: is_available
+
+    // UBAH KE BOOLEAN: Karena JSON dari Laravel mengirim true/false
+    @SerializedName("is_available") val isAvailable: Boolean?
 )
 
 data class ProductResponse(
     @SerializedName("message") val message: String?,
-    @SerializedName("data") val products: List<ProductModel> // Map "data" ke "products"
+    @SerializedName("data") val products: List<ProductModel>
 )
