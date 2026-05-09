@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.project.matchone.R
 import com.project.matchone.data.model.ProductModel
 import java.text.NumberFormat
@@ -31,24 +32,33 @@ class MenuAdapter(private val listProduct: List<ProductModel>) :
 
         holder.tvName.text = product.name
 
-        // Format Harga ke Rupiah
+        // --- 1. FORMAT HARGA RUPIAH ---
         val localeID = Locale("in", "ID")
         val formatRupiah = NumberFormat.getCurrencyInstance(localeID)
-        
-        // Handle String price "40000.00"
+
+        // Mengubah string "40000.00" menjadi angka lalu diformat
         val priceDouble = product.price.toDoubleOrNull() ?: 0.0
         holder.tvPrice.text = formatRupiah.format(priceDouble)
 
-        // Sesuai JSON Laravel: is_available
+        // --- 2. HANDLE STATUS KETERSEDIAAN (INT) ---
+        // Di Laravel, is_available biasanya 1 (tersedia) atau 0 (kosong)
         if (product.isAvailable == false) {
             holder.tvLabelNew.text = "Sold Out"
             holder.tvLabelNew.visibility = View.VISIBLE
         } else {
             holder.tvLabelNew.visibility = View.GONE
         }
+        // --- 3. KONEKSI CLOUDINARY VIA GLIDE ---
+        Glide.with(holder.itemView.context)
+            .load(product.image)
+            .placeholder(R.drawable.placeholder_image) // Pastikan file ini ada di res/drawable
+            .error(R.drawable.error_image)             // Pastikan file ini ada di res/drawable
+            .centerCrop()
+            .into(holder.ivProduct)
 
+        // --- 4. NAVIGASI DETAIL ---
         holder.itemView.setOnClickListener {
-            // Nanti arahkan ke DetailActivity
+            // Nanti di sini kita buatkan Intent ke DetailActivity
         }
     }
 
