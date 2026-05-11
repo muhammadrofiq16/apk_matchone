@@ -52,4 +52,5 @@ dependencies {
     // Untuk memuat gambar dari URL Cloudinary ke ImageView
     annotationProcessor("com.github.bumptech.glide:compiler:4.15.1")
     implementation("com.github.bumptech.glide:glide:4.15.1")
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
 }
