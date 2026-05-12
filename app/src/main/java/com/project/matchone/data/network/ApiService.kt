@@ -63,4 +63,44 @@ interface ApiService {
     fun getProductsByCategory(
         @Query("category_id") categoryId: Int
     ): Call<ProductResponse>
+    // --- 4. CART SYSTEM (Menyesuaikan route Laravel) ---
+
+    // Di ApiService.kt
+    @GET("api/cart")
+    fun getCart(
+        @Header("Authorization") token: String
+    ): Call<List<com.project.matchone.data.model.CartItem>>
+// ^ Pastikan ini List<CartItem>, bukan List<CartResponse>
+
+    @FormUrlEncoded
+    @POST("api/cart")
+    fun addToCart(
+        @Header("Authorization") token: String,
+        @Field("product_id") productId: Int,
+        @Field("quantity") quantity: Int
+    ): Call<com.project.matchone.data.model.CartResponse>
+
+    @FormUrlEncoded
+    @PUT("api/cart/{id}")
+    fun updateCart(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int,
+        @Field("quantity") quantity: Int
+    ): Call<com.project.matchone.data.model.CartResponse>
+
+    @DELETE("api/cart/{id}")
+    fun deleteCartItem(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int
+    ): Call<com.project.matchone.data.model.CartResponse>
+
+    @DELETE("api/cart")
+    fun clearCart(
+        @Header("Authorization") token: String
+    ): Call<com.project.matchone.data.model.CartResponse>
+
+    @GET("api/cart/summary")
+    fun getCartSummary(
+        @Header("Authorization") token: String
+    ): Call<com.project.matchone.data.model.CartSummary>
 }

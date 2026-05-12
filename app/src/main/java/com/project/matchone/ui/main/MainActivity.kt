@@ -15,7 +15,8 @@ import com.project.matchone.adapter.MenuAdapter
 import com.project.matchone.data.model.CategoryResponse
 import com.project.matchone.data.model.ProductResponse
 import com.project.matchone.data.network.ApiClient
-import com.project.matchone.ui.auth.LoginActivity
+import com.project.matchone.ui.auth.LoginActivity // Pastikan import ini sesuai dengan package CartActivity Anda
+import com.project.matchone.ui.checkout.CartActivity
 import com.project.matchone.ui.profile.ProfileActivity
 import com.project.matchone.utils.SessionManager
 import retrofit2.Call
@@ -58,12 +59,20 @@ class MainActivity : AppCompatActivity() {
         fetchProducts()
 
         // --- 3. NAVIGASI ---
+        navHome.setOnClickListener {
+            // Scroll ke atas atau refresh data jika diperlukan
+            rvProducts.smoothScrollToPosition(0)
+        }
+
+        navCart.setOnClickListener {
+            // Pindah ke halaman Keranjang
+            startActivity(Intent(this, CartActivity::class.java))
+        }
+
         navProfile.setOnClickListener {
             // Contoh implementasi logout sederhana atau pindah ke profile
             showLogoutDialog()
         }
-        
-        // navCart.setOnClickListener { ... }
     }
 
     private fun fetchCategories() {
@@ -121,7 +130,6 @@ class MainActivity : AppCompatActivity() {
         val token = "Bearer " + sessionManager.fetchAuthToken()
         ApiClient.instance.logoutUser(token).enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                // Tetap hapus session lokal meskipun API logout gagal (misal token expired)
                 sessionManager.clearSession()
                 moveToLogin()
             }
