@@ -39,10 +39,3 @@ data class ProductDetail(
     val image: String?
 )
 
-// 4. Tambahkan ini agar error di ApiService.kt hilang!
-data class CartSummary(
-    @SerializedName("total_items")
-    val totalItems: Int,
-    @SerializedName("total_price")
-    val totalPrice: Double
-)

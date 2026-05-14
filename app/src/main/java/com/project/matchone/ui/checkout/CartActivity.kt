@@ -1,8 +1,8 @@
 package com.project.matchone.ui.checkout
 
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
-import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -24,9 +24,14 @@ class CartActivity : AppCompatActivity(), CartAdapter.OnCartListener {
 
     private lateinit var rvCart: RecyclerView
     private lateinit var tvTotal: TextView
-    private lateinit var btnClear: Button
+
+    // Pakai View agar aman walaupun di XML bentuknya Button, ImageButton, atau MaterialButton
+    private lateinit var btnBack: View
+    private lateinit var btnClear: View
+
     private lateinit var btnCheckout: Button
-    private lateinit var progressBar: ProgressBar
+    private lateinit var btnTambahPesanan: TextView
+
     private lateinit var cartAdapter: CartAdapter
     private lateinit var sessionManager: SessionManager
     private lateinit var cartRepository: CartRepository
@@ -43,24 +48,50 @@ class CartActivity : AppCompatActivity(), CartAdapter.OnCartListener {
         val token = sessionManager.fetchAuthToken() ?: ""
         cartRepository = CartRepository(token)
 
-        rvCart = findViewById(R.id.rvCart)
-        tvTotal = findViewById(R.id.tvTotalPrice)
-        btnClear = findViewById(R.id.btnClearCart)
-        btnCheckout = findViewById(R.id.btnCheckout)
-
-        rvCart.layoutManager = LinearLayoutManager(this)
-        cartAdapter = CartAdapter(emptyList(), this)
-        rvCart.adapter = cartAdapter
+        initViews()
+        setupRecyclerView()
+        setupClickListeners()
 
         loadCart()
-
-        btnClear.setOnClickListener { clearAllCart() }
-        btnCheckout.setOnClickListener { processCheckout() }
     }
 
     override fun onResume() {
         super.onResume()
         loadCart()
+    }
+
+    private fun initViews() {
+        rvCart = findViewById(R.id.rvCart)
+        tvTotal = findViewById(R.id.tvTotalPrice)
+
+        btnBack = findViewById(R.id.btnBack)
+        btnClear = findViewById(R.id.btnClearCart)
+        btnCheckout = findViewById(R.id.btnCheckout)
+        btnTambahPesanan = findViewById(R.id.btnTambahPesanan)
+    }
+
+    private fun setupRecyclerView() {
+        rvCart.layoutManager = LinearLayoutManager(this)
+        cartAdapter = CartAdapter(emptyList(), this)
+        rvCart.adapter = cartAdapter
+    }
+
+    private fun setupClickListeners() {
+        btnBack.setOnClickListener {
+            finish()
+        }
+
+        btnTambahPesanan.setOnClickListener {
+            finish()
+        }
+
+        btnClear.setOnClickListener {
+            clearAllCart()
+        }
+
+        btnCheckout.setOnClickListener {
+            processCheckout()
+        }
     }
 
     private fun loadCart() {
@@ -74,6 +105,7 @@ class CartActivity : AppCompatActivity(), CartAdapter.OnCartListener {
                 updateTotal(items)
             },
             onError = { msg ->
+                btnCheckout.isEnabled = false
                 Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
             }
         )
@@ -131,7 +163,12 @@ class CartActivity : AppCompatActivity(), CartAdapter.OnCartListener {
                 cartAdapter.updateData(emptyList())
                 updateTotal(emptyList())
                 btnCheckout.isEnabled = false
-                Toast.makeText(this, "Keranjang dibersihkan", Toast.LENGTH_SHORT).show()
+
+                Toast.makeText(
+                    this,
+                    "Keranjang dibersihkan",
+                    Toast.LENGTH_SHORT
+                ).show()
             },
             onError = { msg ->
                 Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
@@ -141,7 +178,11 @@ class CartActivity : AppCompatActivity(), CartAdapter.OnCartListener {
 
     private fun processCheckout() {
         if (cartItems.isEmpty()) {
-            Toast.makeText(this, "Keranjang masih kosong!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this,
+                "Keranjang masih kosong!",
+                Toast.LENGTH_SHORT
+            ).show()
             return
         }
 
@@ -156,7 +197,7 @@ class CartActivity : AppCompatActivity(), CartAdapter.OnCartListener {
                 response: Response<CheckoutResponse>
             ) {
                 btnCheckout.isEnabled = true
-                btnCheckout.text = "Lanjut ke Pembayaran"
+                btnCheckout.text = "Checkout"
 
                 if (response.isSuccessful) {
                     Toast.makeText(
@@ -164,6 +205,7 @@ class CartActivity : AppCompatActivity(), CartAdapter.OnCartListener {
                         "Pesanan berhasil dibuat!",
                         Toast.LENGTH_LONG
                     ).show()
+
                     loadCart()
                 } else {
                     Toast.makeText(
@@ -174,9 +216,13 @@ class CartActivity : AppCompatActivity(), CartAdapter.OnCartListener {
                 }
             }
 
-            override fun onFailure(call: Call<CheckoutResponse>, t: Throwable) {
+            override fun onFailure(
+                call: Call<CheckoutResponse>,
+                t: Throwable
+            ) {
                 btnCheckout.isEnabled = true
-                btnCheckout.text = "Lanjut ke Pembayaran"
+                btnCheckout.text = "Checkout"
+
                 Toast.makeText(
                     this@CartActivity,
                     "Koneksi bermasalah: ${t.message}",
@@ -185,4 +231,4 @@ class CartActivity : AppCompatActivity(), CartAdapter.OnCartListener {
             }
         })
     }
-}x
+}
