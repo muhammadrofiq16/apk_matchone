@@ -13,11 +13,12 @@ import com.project.matchone.R
 import com.project.matchone.adapter.CategoryAdapter
 import com.project.matchone.adapter.MenuAdapter
 import com.project.matchone.data.model.CategoryResponse
+import com.project.matchone.data.model.ProductModel
 import com.project.matchone.data.model.ProductResponse
 import com.project.matchone.data.network.ApiClient
-import com.project.matchone.ui.auth.LoginActivity // Pastikan import ini sesuai dengan package CartActivity Anda
+import com.project.matchone.ui.auth.LoginActivity
 import com.project.matchone.ui.checkout.CartActivity
-import com.project.matchone.ui.profile.ProfileActivity
+import com.project.matchone.utils.CartRepository
 import com.project.matchone.utils.SessionManager
 import retrofit2.Call
 import retrofit2.Callback
@@ -30,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var adapterCategory: CategoryAdapter
     private lateinit var adapterMenu: MenuAdapter
     private lateinit var sessionManager: SessionManager
+    private lateinit var cartRepository: CartRepository  // ← ganti CartManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,40 +39,37 @@ class MainActivity : AppCompatActivity() {
 
         sessionManager = SessionManager(this)
 
-        // Cek apakah user sudah login, jika tidak lempar ke LoginActivity
         if (!sessionManager.isLoggedIn()) {
             moveToLogin()
+            return
         }
 
-        // --- 1. INISIALISASI VIEW ---
-        val navHome = findViewById<LinearLayout>(R.id.navHome)
-        val navCart = findViewById<LinearLayout>(R.id.navCart)
+        // Inisialisasi CartRepository dengan token user
+        val token = sessionManager.fetchAuthToken() ?: ""
+        cartRepository = CartRepository(token)
+
+        val navHome    = findViewById<LinearLayout>(R.id.navHome)
+        val navCart    = findViewById<LinearLayout>(R.id.navCart)
         val navProfile = findViewById<LinearLayout>(R.id.navProfile)
 
         rvCategories = findViewById(R.id.rvCategories)
-        rvProducts = findViewById(R.id.rvProducts)
+        rvProducts   = findViewById(R.id.rvProducts)
 
-        // LayoutManager: Kategori (Horizontal), Produk (Grid 2 Kolom)
         rvCategories.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        rvProducts.layoutManager = GridLayoutManager(this, 2)
+        rvProducts.layoutManager   = GridLayoutManager(this, 2)
 
-        // --- 2. AMBIL DATA DARI API ---
         fetchCategories()
         fetchProducts()
 
-        // --- 3. NAVIGASI ---
         navHome.setOnClickListener {
-            // Scroll ke atas atau refresh data jika diperlukan
             rvProducts.smoothScrollToPosition(0)
         }
 
         navCart.setOnClickListener {
-            // Pindah ke halaman Keranjang
             startActivity(Intent(this, CartActivity::class.java))
         }
 
         navProfile.setOnClickListener {
-            // Contoh implementasi logout sederhana atau pindah ke profile
             showLogoutDialog()
         }
     }
@@ -86,7 +85,6 @@ class MainActivity : AppCompatActivity() {
                     rvCategories.adapter = adapterCategory
                 }
             }
-
             override fun onFailure(call: Call<CategoryResponse>, t: Throwable) {
                 Toast.makeText(this@MainActivity, "Gagal konek: ${t.message}", Toast.LENGTH_SHORT).show()
             }
@@ -104,24 +102,44 @@ class MainActivity : AppCompatActivity() {
             override fun onResponse(call: Call<ProductResponse>, response: Response<ProductResponse>) {
                 if (response.isSuccessful && response.body() != null) {
                     val products = response.body()!!.products
-                    adapterMenu = MenuAdapter(products)
+
+                    adapterMenu = MenuAdapter(products) { clickedProduct ->
+                        addToCart(clickedProduct)  // ← kirim ke Laravel
+                    }
                     rvProducts.adapter = adapterMenu
                 }
             }
-
             override fun onFailure(call: Call<ProductResponse>, t: Throwable) {
                 Toast.makeText(this@MainActivity, "Error produk: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
     }
 
+    // Tambah ke cart via Laravel API
+    private fun addToCart(product: ProductModel) {
+        val productId = product.id ?: return
+
+        cartRepository.addToCart(
+            productId = productId,
+            quantity  = 1,
+            onSuccess = {
+                Toast.makeText(
+                    this@MainActivity,
+                    "${product.name} berhasil dimasukkan ke keranjang!",
+                    Toast.LENGTH_SHORT
+                ).show()
+            },
+            onError = { msg ->
+                Toast.makeText(this@MainActivity, msg, Toast.LENGTH_SHORT).show()
+            }
+        )
+    }
+
     private fun showLogoutDialog() {
         AlertDialog.Builder(this)
             .setTitle("Logout")
             .setMessage("Apakah anda yakin ingin keluar?")
-            .setPositiveButton("Ya") { _, _ ->
-                logout()
-            }
+            .setPositiveButton("Ya") { _, _ -> logout() }
             .setNegativeButton("Tidak", null)
             .show()
     }
@@ -133,7 +151,6 @@ class MainActivity : AppCompatActivity() {
                 sessionManager.clearSession()
                 moveToLogin()
             }
-
             override fun onFailure(call: Call<Void>, t: Throwable) {
                 sessionManager.clearSession()
                 moveToLogin()

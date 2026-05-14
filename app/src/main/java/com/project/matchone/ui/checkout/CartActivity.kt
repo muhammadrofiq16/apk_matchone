@@ -2,6 +2,7 @@ package com.project.matchone.ui.checkout
 
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -9,21 +10,29 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.project.matchone.R
 import com.project.matchone.data.model.CartItem
-import com.project.matchone.data.model.CartResponse
-import com.project.matchone.data.model.CartSummary
+import com.project.matchone.data.model.CheckoutResponse
 import com.project.matchone.data.network.ApiClient
+import com.project.matchone.utils.CartRepository
 import com.project.matchone.utils.SessionManager
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.text.NumberFormat
+import java.util.Locale
 
 class CartActivity : AppCompatActivity(), CartAdapter.OnCartListener {
 
     private lateinit var rvCart: RecyclerView
     private lateinit var tvTotal: TextView
     private lateinit var btnClear: Button
+    private lateinit var btnCheckout: Button
+    private lateinit var progressBar: ProgressBar
     private lateinit var cartAdapter: CartAdapter
     private lateinit var sessionManager: SessionManager
+    private lateinit var cartRepository: CartRepository
+
+    private var cartItems: List<CartItem> = emptyList()
+    private var isUpdatingCart = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,84 +40,149 @@ class CartActivity : AppCompatActivity(), CartAdapter.OnCartListener {
 
         sessionManager = SessionManager(this)
 
+        val token = sessionManager.fetchAuthToken() ?: ""
+        cartRepository = CartRepository(token)
+
         rvCart = findViewById(R.id.rvCart)
         tvTotal = findViewById(R.id.tvTotalPrice)
         btnClear = findViewById(R.id.btnClearCart)
+        btnCheckout = findViewById(R.id.btnCheckout)
 
         rvCart.layoutManager = LinearLayoutManager(this)
         cartAdapter = CartAdapter(emptyList(), this)
         rvCart.adapter = cartAdapter
 
         loadCart()
-        loadSummary()
 
         btnClear.setOnClickListener { clearAllCart() }
+        btnCheckout.setOnClickListener { processCheckout() }
     }
 
-    private fun getAuthToken(): String {
-        val token = sessionManager.fetchAuthToken() // Menggunakan fetchAuthToken agar konsisten dengan SessionManager
-        return if (token != null) "Bearer $token" else ""
+    override fun onResume() {
+        super.onResume()
+        loadCart()
     }
 
     private fun loadCart() {
-        ApiClient.instance.getCart(getAuthToken()).enqueue(object : Callback<List<CartItem>> {
-            override fun onResponse(call: Call<List<CartItem>>, response: Response<List<CartItem>>) {
-                if (response.isSuccessful) {
-                    val list = response.body() ?: emptyList()
-                    cartAdapter.updateData(list)
-                }
+        btnCheckout.isEnabled = false
+
+        cartRepository.getCart(
+            onSuccess = { items ->
+                cartItems = items
+                cartAdapter.updateData(items)
+                btnCheckout.isEnabled = items.isNotEmpty()
+                updateTotal(items)
+            },
+            onError = { msg ->
+                Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
             }
-            override fun onFailure(call: Call<List<CartItem>>, t: Throwable) {
-                Toast.makeText(this@CartActivity, "Gagal memuat data", Toast.LENGTH_SHORT).show()
-            }
-        })
+        )
     }
 
-    private fun loadSummary() {
-        ApiClient.instance.getCartSummary(getAuthToken()).enqueue(object : Callback<CartSummary> {
-            override fun onResponse(call: Call<CartSummary>, response: Response<CartSummary>) {
-                if (response.isSuccessful) {
-                    tvTotal.text = "Total: Rp ${response.body()?.total_price ?: 0}"
-                }
-            }
-            override fun onFailure(call: Call<CartSummary>, t: Throwable) {}
-        })
+    private fun updateTotal(items: List<CartItem>) {
+        val total = items.sumOf { it.subtotal.toDouble() }
+
+        val localeID = Locale("in", "ID")
+        val formatRupiah = NumberFormat.getCurrencyInstance(localeID)
+
+        tvTotal.text = formatRupiah.format(total).replace("Rp", "Rp ")
     }
 
     override fun onUpdateQuantity(id: Int, newQty: Int) {
-        ApiClient.instance.updateCart(getAuthToken(), id, newQty).enqueue(object : Callback<CartResponse> {
-            override fun onResponse(call: Call<CartResponse>, response: Response<CartResponse>) {
-                if (response.isSuccessful) {
-                    loadCart()
-                    loadSummary()
-                }
+        if (isUpdatingCart) return
+
+        if (newQty <= 0) {
+            onDeleteItem(id)
+            return
+        }
+
+        isUpdatingCart = true
+
+        cartRepository.updateCart(
+            cartId = id,
+            newQuantity = newQty,
+            onSuccess = {
+                isUpdatingCart = false
+                loadCart()
+            },
+            onError = { msg ->
+                isUpdatingCart = false
+                Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
             }
-            override fun onFailure(call: Call<CartResponse>, t: Throwable) {}
-        })
+        )
     }
 
     override fun onDeleteItem(id: Int) {
-        ApiClient.instance.deleteCartItem(getAuthToken(), id).enqueue(object : Callback<CartResponse> {
-            override fun onResponse(call: Call<CartResponse>, response: Response<CartResponse>) {
-                if (response.isSuccessful) {
-                    loadCart()
-                    loadSummary()
-                }
+        cartRepository.deleteItem(
+            cartId = id,
+            onSuccess = {
+                loadCart()
+            },
+            onError = { msg ->
+                Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
             }
-            override fun onFailure(call: Call<CartResponse>, t: Throwable) {}
-        })
+        )
     }
 
     private fun clearAllCart() {
-        ApiClient.instance.clearCart(getAuthToken()).enqueue(object : Callback<CartResponse> {
-            override fun onResponse(call: Call<CartResponse>, response: Response<CartResponse>) {
+        cartRepository.clearCart(
+            onSuccess = {
+                cartItems = emptyList()
+                cartAdapter.updateData(emptyList())
+                updateTotal(emptyList())
+                btnCheckout.isEnabled = false
+                Toast.makeText(this, "Keranjang dibersihkan", Toast.LENGTH_SHORT).show()
+            },
+            onError = { msg ->
+                Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+            }
+        )
+    }
+
+    private fun processCheckout() {
+        if (cartItems.isEmpty()) {
+            Toast.makeText(this, "Keranjang masih kosong!", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        btnCheckout.isEnabled = false
+        btnCheckout.text = "Memproses..."
+
+        val token = "Bearer ${sessionManager.fetchAuthToken()}"
+
+        ApiClient.instance.checkoutCart(token).enqueue(object : Callback<CheckoutResponse> {
+            override fun onResponse(
+                call: Call<CheckoutResponse>,
+                response: Response<CheckoutResponse>
+            ) {
+                btnCheckout.isEnabled = true
+                btnCheckout.text = "Lanjut ke Pembayaran"
+
                 if (response.isSuccessful) {
+                    Toast.makeText(
+                        this@CartActivity,
+                        "Pesanan berhasil dibuat!",
+                        Toast.LENGTH_LONG
+                    ).show()
                     loadCart()
-                    loadSummary()
-                    Toast.makeText(this@CartActivity, "Keranjang dibersihkan", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(
+                        this@CartActivity,
+                        "Gagal membuat pesanan",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
-            override fun onFailure(call: Call<CartResponse>, t: Throwable) {}
+
+            override fun onFailure(call: Call<CheckoutResponse>, t: Throwable) {
+                btnCheckout.isEnabled = true
+                btnCheckout.text = "Lanjut ke Pembayaran"
+                Toast.makeText(
+                    this@CartActivity,
+                    "Koneksi bermasalah: ${t.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         })
     }
-}
+}x

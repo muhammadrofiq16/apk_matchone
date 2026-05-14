@@ -1,63 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:background="#FAFAFA"> <!-- Latar belakang sedikit abu-abu agar card item lebih menonjol -->
 
-    <TextView
-        android:id="@+id/tvTitle"
-        android:layout_width="wrap_content"
+    <!-- ========================= -->
+    <!-- HEADER (Judul & Hapus)    -->
+    <!-- ========================= -->
+    <RelativeLayout
+        android:id="@+id/headerLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Keranjang Saya"
-        android:textSize="22sp"
-        android:textStyle="bold" />
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp"
+        android:background="@android:color/white"
+        android:elevation="2dp">
 
-    <Button
-        android:id="@+id/btnClearCart"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:text="Hapus Semua"
-        android:textColor="#F44336" />
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="Keranjang Belanja"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
+        <Button
+            android:id="@+id/btnClearCart"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:text="Hapus Semua"
+            android:textAllCaps="false"
+            android:textColor="#E53935" />
+    </RelativeLayout>
+
+    <!-- ========================= -->
+    <!-- DAFTAR ITEM KERANJANG     -->
+    <!-- ========================= -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvCart"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/layoutSummary"
-        android:layout_below="@id/tvTitle"
-        android:layout_marginTop="16dp" />
+        android:layout_below="@id/headerLayout"
+        android:clipToPadding="false"
+        android:paddingVertical="8dp" />
 
+    <!-- ========================= -->
+    <!-- BAGIAN BAWAH (Checkout)   -->
+    <!-- ========================= -->
     <LinearLayout
         android:id="@+id/layoutSummary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="vertical"
         android:background="@android:color/white"
-        android:paddingTop="8dp">
+        android:elevation="8dp"
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#EEEEEE" />
-
-        <TextView
-            android:id="@+id/tvTotalPrice"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Total: Rp 0"
-            android:textAlignment="viewEnd"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:layout_marginBottom="12dp">
 
-        <Button
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:text="Total Pembayaran"
+                android:textColor="#757575"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tvTotalPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:text="Rp 0"
+                android:textColor="#2E7D32"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnCheckout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Checkout Sekarang" />
+            android:layout_height="55dp"
+            android:text="Lanjut ke Pembayaran"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:backgroundTint="#2E7D32"
+            app:cornerRadius="8dp" />
     </LinearLayout>
+
 </RelativeLayout>

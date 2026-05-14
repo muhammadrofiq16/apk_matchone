@@ -37,6 +37,18 @@
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
+            <!-- Tambahkan ini di dalam layout item_menu kamu -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAddToCart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="+ Keranjang"
+                android:textSize="12sp"
+                android:textColor="@color/white"
+                app:backgroundTint="#2E7D32"
+                app:cornerRadius="8dp" />
+
             <TextView
                 android:id="@+id/tvProductPrice"
                 android:layout_width="match_parent"

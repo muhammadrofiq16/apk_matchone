@@ -9,7 +9,7 @@ object ApiClient {
 
     // IP 10.0.2.2 adalah shortcut untuk 'localhost' di komputer dari Emulator Android.
     // Menggunakan port 8000 sesuai settingan Laravel (php artisan serve).
-    private const val BASE_URL = "http://192.168.100.10:8000/"
+    private const val BASE_URL = "http://10.114.106.128:8000/"
 
     private val logging: HttpLoggingInterceptor
         get() {
