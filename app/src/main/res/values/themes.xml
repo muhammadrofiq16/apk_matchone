@@ -6,4 +6,8 @@
     </style>
 
     <style name="Theme.MatchOne" parent="Base.Theme.MatchOne" />
+
+    <style name="RoundedImageView">
+        <item name="cornerSize">12.dp</item>
+    </style>
 </resources>

@@ -1,10 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.checkout.PaymentActivity">
+    android:orientation="vertical"
+    android:background="#F8F8F8"
+    android:padding="16.dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- Header -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pembayaran"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:layout_marginBottom="24.dp"/>
+
+    <!-- Total Tagihan -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="12.dp"
+        app:cardElevation="2.dp"
+        android:layout_marginBottom="24.dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16.dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="0.dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Total Tagihan"
+                android:textSize="16sp"
+                android:textColor="@color/black"/>
+
+            <TextView
+                android:id="@+id/tvTotalPayment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Rp 0"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#2E7D32"/>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Pilihan Metode Pembayaran -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pilih Metode Pembayaran"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:layout_marginBottom="8.dp"/>
+
+    <RadioGroup
+        android:id="@+id/rgPaymentMethod"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_quantity_control"
+        android:padding="8.dp">
+
+        <RadioButton
+            android:id="@+id/rbTransfer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Transfer Bank (BCA / Mandiri)"
+            android:padding="12.dp"/>
+
+        <RadioButton
+            android:id="@+id/rbEWallet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="E-Wallet (GoPay / ShopeePay / Dana)"
+            android:padding="12.dp"/>
+
+        <RadioButton
+            android:id="@+id/rbCOD"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Bayar di Tempat (COD)"
+            android:padding="12.dp"/>
+    </RadioGroup>
+
+    <!-- Spacer untuk mendorong tombol ke bawah -->
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0.dp"
+        android:layout_weight="1"/>
+
+    <!-- Tombol Konfirmasi (Diubah ke MaterialButton) -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnConfirmPayment"
+        android:layout_width="match_parent"
+        android:layout_height="56.dp"
+        android:text="Konfirmasi Pesanan"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:backgroundTint="#2E7D32"
+        app:cornerRadius="12.dp"/>
+
+</LinearLayout>
