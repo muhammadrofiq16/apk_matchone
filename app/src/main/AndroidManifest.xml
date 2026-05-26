@@ -29,6 +29,7 @@
         <activity android:name=".ui.main.HomeActivity" android:exported="false" />
         <activity android:name=".ui.main.CatalogActivity" android:exported="false" />
         <activity android:name=".ui.profile.ProfileActivity" android:exported="false" />
+        <activity android:name=".ui.profile.HistoryActivity" android:exported="false" />
         <activity android:name=".ui.contact.ContactActivity" android:exported="false" />
 
         <activity android:name=".ui.checkout.CartActivity" android:exported="false" />

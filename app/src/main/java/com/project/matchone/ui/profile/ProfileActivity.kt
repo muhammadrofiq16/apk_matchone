@@ -84,8 +84,9 @@ class ProfileActivity : AppCompatActivity() {
         }
 
         // --- PESAN ---
+        // Update: sambungkan ke HistoryActivity
         btnHistoryOrder.setOnClickListener {
-            Toast.makeText(this, "Riwayat Pesanan", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, HistoryActivity::class.java))
         }
         itemMetodePembayaran.setOnClickListener {
             Toast.makeText(this, "Metode Pembayaran", Toast.LENGTH_SHORT).show()
@@ -159,7 +160,6 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun setupBottomNav() {
-        // Highlight tab Profile aktif
         try {
             findViewById<TextView>(R.id.iconProfile)
                 .setTextColor(android.graphics.Color.parseColor("#2D5A27"))
@@ -180,7 +180,6 @@ class ProfileActivity : AppCompatActivity() {
         findViewById<LinearLayout>(R.id.navCart)?.setOnClickListener {
             startActivity(Intent(this, CartActivity::class.java))
         }
-        // navProfile sudah aktif di halaman ini, tidak perlu listener
     }
 
     private fun moveToLogin() {
