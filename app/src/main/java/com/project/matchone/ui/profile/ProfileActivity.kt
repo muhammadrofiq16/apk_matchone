@@ -11,14 +11,16 @@ import androidx.appcompat.app.AppCompatActivity
 import com.project.matchone.R
 import com.project.matchone.ui.auth.LoginActivity
 import com.project.matchone.ui.main.MainActivity
+import com.project.matchone.ui.checkout.CartActivity
 
 class ProfileActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Pastikan nama file layoutmu benar 'activity_profile'
         setContentView(R.layout.activity_profile)
 
-        // --- 1. INISIALISASI VIEW ---
+        // --- 1. INISIALISASI VIEW SECARA MANUAL ---
         val tvPoints = findViewById<TextView>(R.id.tvPoints)
         val etName = findViewById<EditText>(R.id.etProfileName)
         val etEmail = findViewById<EditText>(R.id.etProfileEmail)
@@ -31,71 +33,42 @@ class ProfileActivity : AppCompatActivity() {
         val navHome = findViewById<ImageView>(R.id.navHome)
         val navCart = findViewById<ImageView>(R.id.navCart)
 
-        // ==========================================
-        // [TAMPILKAN DATA SAAT HALAMAN DIBUKA]
-        // Nanti kamu ambil data dari SessionManager/SharedPreferences
-        // ==========================================
+        // --- 2. ISI DATA DUMMY ---
+        tvPoints.text = "500 Poin"
+        etName.setText("User MatchOne")
+        etEmail.setText("user@example.com")
+        etPhone.setText("08123456789")
 
-        // --- 2. LOGIC SIMPAN PERUBAHAN (PUT UPDATE PROFILE) ---
+        // --- 3. LOGIC SIMPAN ---
         btnSaveProfile.setOnClickListener {
-            val updatedName = etName.text.toString().trim()
-            val updatedEmail = etEmail.text.toString().trim()
-            val updatedPhone = etPhone.text.toString().trim()
-
-            if (updatedName.isEmpty() || updatedEmail.isEmpty() || updatedPhone.isEmpty()) {
-                Toast.makeText(this, "Data tidak boleh kosong!", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            // [Nanti pasang logic Retrofit Update Profile di sini]
             Toast.makeText(this, "Profil berhasil diperbarui!", Toast.LENGTH_SHORT).show()
         }
 
-        // --- 3. LOGIC TOMBOL RIWAYAT ---
+        // --- 4. LOGIC TOMBOL RIWAYAT (MENUJU HISTORY) ---
         btnHistoryOrder.setOnClickListener {
-            Toast.makeText(this, "Buka Riwayat Pesanan", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, HistoryActivity::class.java)
+            startActivity(intent)
         }
 
-        // --- 4. LOGIC TOMBOL LOGOUT (DELETE) ---
+        // --- 5. LOGIC TOMBOL LOGOUT ---
         btnLogout.setOnClickListener {
-
-            // ==========================================
-            // [LOGIC API LARAVEL NANTINYA]
-            // Sesuai Postman: Gunakan method DELETE dan kirim Token
-            //
-            // val token = "Bearer " + sessionManager.getToken()
-            // ApiClient.instance.logoutUser(token).enqueue(object : Callback<LogoutResponse> {
-            //      override fun onResponse(...) {
-            //          // 1. Hapus token dari HP agar benar-benar keluar
-            //          // sessionManager.clearSession()
-            //
-            //          // 2. Arahkan kembali ke LoginActivity (kode Intent di bawah)
-            //      }
-            // })
-            // ==========================================
-
-            // Simulasi eksekusi setelah API membalas sukses
             Toast.makeText(this, "Berhasil keluar akun", Toast.LENGTH_SHORT).show()
-
             val intent = Intent(this, LoginActivity::class.java)
-            // Ini wajib agar user tidak bisa menekan tombol 'back' untuk kembali ke profil setelah logout
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
             finish()
         }
 
-        // --- 5. LOGIC NAVIGASI BAWAH ---
+        // --- 6. NAVIGASI ---
         navHome.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
             startActivity(intent)
             finish()
         }
 
-        //navCart.setOnClickListener {
-          //  val intent = Intent(this, CartActivity::class.java)
-            //startActivity(intent)
-            //finish()
-        //}
+        navCart.setOnClickListener {
+            val intent = Intent(this, CartActivity::class.java)
+            startActivity(intent)
+        }
     }
 }
