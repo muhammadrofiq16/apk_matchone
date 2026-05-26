@@ -6,4 +6,5 @@
     <color name="matcha_green_dark">#388E3C</color>
     <color name="bg_light">#F9FDF9</color>
     <color name="text_dark">#2C3E50</color>
+    <color name="cardview_dark_background">#FF424242</color>
 </resources>
