@@ -64,11 +64,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:background="@drawable/bg_price_badge"
             android:paddingHorizontal="12dp"
             android:paddingVertical="6dp"
             android:text="Rp 24.000"
-            android:textColor="#D7434D"
+            android:textColor="#37563b"
             android:textSize="15sp"
             android:textStyle="bold" />
 
@@ -82,7 +81,7 @@
             android:textColor="#FFFFFF"
             android:textSize="13sp"
             android:textStyle="bold"
-            app:backgroundTint="#D5001C"
+            app:backgroundTint="#37563b"
             app:cornerRadius="12dp" />
 
     </LinearLayout>
