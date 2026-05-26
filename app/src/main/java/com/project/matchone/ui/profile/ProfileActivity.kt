@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.project.matchone.R
 import com.project.matchone.ui.auth.LoginActivity
+import com.project.matchone.ui.checkout.CartActivity
 import com.project.matchone.ui.main.HomeActivity
 
 class ProfileActivity : AppCompatActivity() {
