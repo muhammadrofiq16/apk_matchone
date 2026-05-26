@@ -200,6 +200,7 @@ class CartActivity : AppCompatActivity(), CartAdapter.OnCartListener {
                 btnCheckout.text = "Checkout"
 
                 if (response.isSuccessful) {
+                    val checkoutResponse = response.body()
                     Toast.makeText(
                         this@CartActivity,
                         "Pesanan berhasil dibuat!",
@@ -207,11 +208,31 @@ class CartActivity : AppCompatActivity(), CartAdapter.OnCartListener {
                     ).show()
 
                     loadCart()
+
+                    // Pindah ke halaman pembayaran setelah sukses checkout
+                    val intent = android.content.Intent(this@CartActivity, PaymentActivity::class.java)
+                    // Ambil total harga dari keranjang saat ini
+                    val total = cartItems.sumOf { it.subtotal.toDouble() }
+                    intent.putExtra("EXTRA_TOTAL_AMOUNT", total)
+                    
+                    // Kita bisa meneruskan transactionId jika diperlukan
+                    if (checkoutResponse != null && checkoutResponse.transactionId != 0) {
+                        intent.putExtra("EXTRA_TRANSACTION_ID", checkoutResponse.transactionId)
+                    }
+                    
+                    startActivity(intent)
+                    finish() // Tutup CartActivity
                 } else {
+                    val errorBody = response.errorBody()?.string() ?: "Unknown error"
+                    android.util.Log.e("CartActivity", "Checkout Error: $errorBody")
+                    
+                    // Ambil maksimal 100 karakter agar Toast tidak error jika HTML-nya panjang
+                    val shortError = if (errorBody.length > 100) errorBody.substring(0, 100) + "..." else errorBody
+                    
                     Toast.makeText(
                         this@CartActivity,
-                        "Gagal membuat pesanan",
-                        Toast.LENGTH_SHORT
+                        "Gagal: ${response.code()} - $shortError",
+                        Toast.LENGTH_LONG
                     ).show()
                 }
             }
@@ -226,7 +247,7 @@ class CartActivity : AppCompatActivity(), CartAdapter.OnCartListener {
                 Toast.makeText(
                     this@CartActivity,
                     "Koneksi bermasalah: ${t.message}",
-                    Toast.LENGTH_SHORT
+                    Toast.LENGTH_LONG
                 ).show()
             }
         })

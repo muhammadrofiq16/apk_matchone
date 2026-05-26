@@ -29,7 +29,7 @@ import retrofit2.Response
 import java.text.NumberFormat
 import java.util.Locale
 
-class MainActivity : AppCompatActivity() {
+class CatalogActivity : AppCompatActivity() {
 
     private lateinit var rvCategories: RecyclerView
     private lateinit var rvProducts: RecyclerView
@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_catalog)
 
         sessionManager = SessionManager(this)
 
@@ -57,8 +57,13 @@ class MainActivity : AppCompatActivity() {
         cartRepository = CartRepository(token)
 
         val navHome = findViewById<LinearLayout>(R.id.navHome)
+        val navCatalog = findViewById<LinearLayout>(R.id.navCatalog)
         val navCart = findViewById<LinearLayout>(R.id.navCart)
         val navProfile = findViewById<LinearLayout>(R.id.navProfile)
+        
+        // Update UI state for active tab (Catalog)
+        findViewById<TextView>(R.id.iconCatalog).setTextColor(android.graphics.Color.parseColor("#4CAF50"))
+        findViewById<TextView>(R.id.textCatalog).setTextColor(android.graphics.Color.parseColor("#4CAF50"))
 
         rvCategories = findViewById(R.id.rvCategories)
         rvProducts = findViewById(R.id.rvProducts)
@@ -78,6 +83,11 @@ class MainActivity : AppCompatActivity() {
         loadMiniCart()
 
         navHome.setOnClickListener {
+            startActivity(Intent(this, HomeActivity::class.java))
+            finish()
+        }
+
+        navCatalog.setOnClickListener {
             rvProducts.smoothScrollToPosition(0)
         }
 
@@ -170,7 +180,7 @@ class MainActivity : AppCompatActivity() {
                     t: Throwable
                 ) {
                     Toast.makeText(
-                        this@MainActivity,
+                        this@CatalogActivity,
                         "Gagal konek: ${t.message}",
                         Toast.LENGTH_SHORT
                     ).show()
@@ -207,7 +217,7 @@ class MainActivity : AppCompatActivity() {
                 t: Throwable
             ) {
                 Toast.makeText(
-                    this@MainActivity,
+                    this@CatalogActivity,
                     "Error produk: ${t.message}",
                     Toast.LENGTH_SHORT
                 ).show()
@@ -223,7 +233,7 @@ class MainActivity : AppCompatActivity() {
             quantity = 1,
             onSuccess = {
                 Toast.makeText(
-                    this@MainActivity,
+                    this@CatalogActivity,
                     "${product.name} berhasil dimasukkan ke keranjang!",
                     Toast.LENGTH_SHORT
                 ).show()
@@ -232,7 +242,7 @@ class MainActivity : AppCompatActivity() {
             },
             onError = { msg ->
                 Toast.makeText(
-                    this@MainActivity,
+                    this@CatalogActivity,
                     msg,
                     Toast.LENGTH_SHORT
                 ).show()

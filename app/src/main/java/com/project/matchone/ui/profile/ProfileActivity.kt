@@ -10,7 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.project.matchone.R
 import com.project.matchone.ui.auth.LoginActivity
-import com.project.matchone.ui.main.MainActivity
+import com.project.matchone.ui.main.HomeActivity
 
 class ProfileActivity : AppCompatActivity() {
 
@@ -86,7 +86,7 @@ class ProfileActivity : AppCompatActivity() {
 
         // --- 5. LOGIC NAVIGASI BAWAH ---
         navHome.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, HomeActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
             startActivity(intent)
             finish()

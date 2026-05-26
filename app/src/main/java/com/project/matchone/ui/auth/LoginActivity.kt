@@ -17,7 +17,7 @@ import com.google.android.gms.common.api.ApiException
 import com.project.matchone.R
 import com.project.matchone.data.model.LoginResponse
 import com.project.matchone.data.network.ApiClient
-import com.project.matchone.ui.main.MainActivity
+import com.project.matchone.ui.main.HomeActivity
 import com.project.matchone.utils.SessionManager
 import retrofit2.Call
 import retrofit2.Callback
@@ -61,7 +61,7 @@ class LoginActivity : AppCompatActivity() {
         sessionManager = SessionManager(this)
 
         if (sessionManager.isLoggedIn()) {
-            startActivity(Intent(this, MainActivity::class.java))
+            startActivity(Intent(this, HomeActivity::class.java))
             finish()
         }
 
@@ -95,7 +95,7 @@ class LoginActivity : AppCompatActivity() {
                         val token = response.body()!!.token
                         if (token != null) {
                             sessionManager.saveAuthToken(token)
-                            startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                            startActivity(Intent(this@LoginActivity, HomeActivity::class.java))
                             finish()
                         } else {
                             Toast.makeText(this@LoginActivity, "Token tidak ditemukan", Toast.LENGTH_SHORT).show()
@@ -141,7 +141,7 @@ class LoginActivity : AppCompatActivity() {
                         Log.d("GOOGLE_LOGIN", "Sanctum token tersimpan: $sanctumToken")
                         Toast.makeText(this@LoginActivity, "Login Google berhasil!", Toast.LENGTH_SHORT).show()
 
-                        startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                        startActivity(Intent(this@LoginActivity, HomeActivity::class.java))
                         finish()
                     } else {
                         Toast.makeText(this@LoginActivity, "Token dari server tidak ditemukan", Toast.LENGTH_SHORT).show()
