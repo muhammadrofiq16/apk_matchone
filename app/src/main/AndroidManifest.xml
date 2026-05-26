@@ -26,11 +26,13 @@
 
         <activity android:name=".ui.auth.LoginActivity" android:exported="false" />
         <activity android:name=".ui.auth.RegisterActivity" android:exported="false" />
-        <activity android:name=".ui.main.MainActivity" android:exported="false" />
+        <activity android:name=".ui.main.HomeActivity" android:exported="false" />
+        <activity android:name=".ui.main.CatalogActivity" android:exported="false" />
         <activity android:name=".ui.profile.ProfileActivity" android:exported="false" />
         <activity android:name=".ui.contact.ContactActivity" android:exported="false" />
 
         <activity android:name=".ui.checkout.CartActivity" android:exported="false" />
+        <activity android:name=".ui.checkout.PaymentActivity" android:exported="false" />
 
     </application>
 
