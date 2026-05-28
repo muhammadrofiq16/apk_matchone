@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F2F4F3">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="20dp"
+        android:paddingTop="24dp"
+        android:paddingBottom="32dp">
+
+        <!-- STRUK CARD -->
+        <LinearLayout
+            android:id="@+id/strukContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#FFFFFF"
+            android:elevation="2dp">
+
+            <!-- HEADER HIJAU -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:paddingVertical="28dp"
+                android:background="#2D5A27">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🍵"
+                    android:textSize="36sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="MatchOne"
+                    android:textColor="#FFFFFF"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:fontFamily="serif"
+                    android:layout_marginTop="6dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Bukti Pembayaran"
+                    android:textColor="#A8D5A2"
+                    android:textSize="13sp"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+
+            <!-- STATUS BADGE -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingVertical="16dp"
+                android:background="#F0FAF0">
+
+                <TextView
+                    android:id="@+id/tvStatusBadge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="✓ Pesanan Diterima"
+                    android:textColor="#2D5A27"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:background="#D4EDDA"
+                    android:paddingHorizontal="20dp"
+                    android:paddingVertical="8dp" />
+            </LinearLayout>
+
+            <!-- NOMOR INVOICE -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:paddingVertical="20dp"
+                android:paddingHorizontal="24dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="No. Invoice"
+                    android:textColor="#888888"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tvInvoiceNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="INV-XXXXXXXXX"
+                    android:textColor="#1A1A1A"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="4dp" />
+
+                <TextView
+                    android:id="@+id/tvDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="28 Mei 2026"
+                    android:textColor="#888888"
+                    android:textSize="12sp"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+
+            <!-- GARIS PUTUS-PUTUS -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
+                android:textColor="#DDDDDD"
+                android:textSize="10sp"
+                android:singleLine="true" />
+
+            <!-- DETAIL PEMBAYARAN -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="24dp"
+                android:paddingVertical="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Detail Pesanan"
+                    android:textColor="#1A1A1A"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Item Pesanan -->
+                <TextView
+                    android:id="@+id/tvItems"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#444444"
+                    android:textSize="13sp"
+                    android:lineSpacingExtra="6dp" />
+            </LinearLayout>
+
+            <!-- GARIS PUTUS-PUTUS -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
+                android:textColor="#DDDDDD"
+                android:textSize="10sp"
+                android:singleLine="true" />
+
+            <!-- RINGKASAN BIAYA -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="24dp"
+                android:paddingVertical="16dp">
+
+                <!-- Subtotal -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Subtotal"
+                        android:textColor="#888888"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/tvSubtotal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rp 0"
+                        android:textColor="#1A1A1A"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <!-- Biaya Layanan -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Biaya Layanan"
+                        android:textColor="#888888"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Gratis"
+                        android:textColor="#2D5A27"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <!-- Metode Bayar -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Metode Bayar"
+                        android:textColor="#888888"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/tvPaymentMethod"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="-"
+                        android:textColor="#1A1A1A"
+                        android:textSize="13sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- TOTAL HIJAU -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="24dp"
+                android:paddingVertical="16dp"
+                android:background="#2D5A27">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Total Pembayaran"
+                    android:textColor="#A8D5A2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvTotal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Rp 0"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- FOOTER -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:paddingVertical="20dp"
+                android:paddingHorizontal="24dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Terima kasih telah berbelanja di MatchOne"
+                    android:textColor="#888888"
+                    android:textSize="12sp"
+                    android:gravity="center" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Your Daily Ritual, Refined. 🍵"
+                    android:textColor="#2D5A27"
+                    android:textSize="12sp"
+                    android:textStyle="italic"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- TOMBOL AKSI -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDownload"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="52dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:text="⬇ Simpan"
+                android:textColor="#2D5A27"
+                android:textAllCaps="false"
+                android:textStyle="bold"
+                app:strokeColor="#2D5A27"
+                app:cornerRadius="12dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnShare"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="52dp"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:text="↗ Bagikan"
+                android:textColor="#2D5A27"
+                android:textAllCaps="false"
+                android:textStyle="bold"
+                app:strokeColor="#2D5A27"
+                app:cornerRadius="12dp" />
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnBackToHome"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="12dp"
+            android:text="Kembali ke Beranda"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            app:backgroundTint="#2D5A27"
+            app:cornerRadius="12dp" />
+
+    </LinearLayout>
+</ScrollView>
