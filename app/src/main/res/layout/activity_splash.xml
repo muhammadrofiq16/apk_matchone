@@ -1,10 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main.SplashActivity">
+    android:background="#2D5A27">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/tvSplashLogo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🍵"
+            android:textSize="80sp"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/tvSplashBrand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="MatchOne"
+            android:textColor="#FFFFFF"
+            android:textSize="36sp"
+            android:textStyle="bold"
+            android:fontFamily="serif"
+            android:layout_marginTop="12dp"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/tvSplashTagline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Your Daily Ritual, Refined."
+            android:textColor="#A8D5A2"
+            android:textSize="16sp"
+            android:textStyle="italic"
+            android:layout_marginTop="8dp"
+            android:gravity="center" />
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="© 2026 MatchOne"
+        android:textColor="#A8D5A2"
+        android:textSize="12sp"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
