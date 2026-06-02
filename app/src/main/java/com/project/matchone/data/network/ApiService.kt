@@ -3,7 +3,9 @@ package com.project.matchone.data.network
 import com.project.matchone.data.model.CartListResponse
 import com.project.matchone.data.model.CartSummary
 import com.project.matchone.data.model.CategoryResponse
+import com.project.matchone.data.model.CheckoutResponse
 import com.project.matchone.data.model.LoginResponse
+import com.project.matchone.data.model.OrderResponse
 import com.project.matchone.data.model.ProductResponse
 import com.project.matchone.data.model.UserModel
 import com.project.matchone.utils.CartResponse
@@ -105,10 +107,10 @@ interface ApiService {
     @POST("api/checkout")
     fun checkoutCart(
         @Header("Authorization") token: String
-    ): Call<com.project.matchone.data.model.CheckoutResponse>
+    ): Call<CheckoutResponse>
 
-    @GET("api/transactions")
-    fun getTransactions(
+    @GET("api/orders")
+    fun getOrders(
         @Header("Authorization") token: String
-    ): Call<List<com.project.matchone.data.model.TransactionModel>>
+    ): Call<OrderResponse>
 }

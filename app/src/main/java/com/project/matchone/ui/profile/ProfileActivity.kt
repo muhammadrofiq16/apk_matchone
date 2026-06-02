@@ -14,6 +14,7 @@ import com.project.matchone.ui.auth.LoginActivity
 import com.project.matchone.ui.checkout.CartActivity
 import com.project.matchone.ui.main.CatalogActivity
 import com.project.matchone.ui.main.HomeActivity
+import com.project.matchone.ui.main.WebViewActivity
 import com.project.matchone.utils.SessionManager
 import retrofit2.Call
 import retrofit2.Callback
@@ -66,52 +67,92 @@ class ProfileActivity : AppCompatActivity() {
 
         // --- GABUNG WHATSAPP ---
         btnGabung.setOnClickListener {
-            Toast.makeText(this, "Menghubungkan ke WhatsApp...", Toast.LENGTH_SHORT).show()
+            val nomorWA = "6281234567890" // ganti nomor WhatsApp bisnis kamu
+            val intent = Intent(
+                Intent.ACTION_VIEW,
+                android.net.Uri.parse("https://wa.me/$nomorWA?text=Halo%20MatchOne%2C%20saya%20ingin%20bergabung!")
+            )
+            startActivity(intent)
         }
 
         // --- AKUN ---
         itemKotakMasuk.setOnClickListener {
-            Toast.makeText(this, "Kotak Masuk", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Fitur Kotak Masuk segera hadir!", Toast.LENGTH_SHORT).show()
         }
         itemAlamat.setOnClickListener {
-            Toast.makeText(this, "Alamat Pengiriman", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Fitur Alamat Pengiriman segera hadir!", Toast.LENGTH_SHORT).show()
         }
         itemScan.setOnClickListener {
-            Toast.makeText(this, "Scan Merchandise", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Fitur Scan Merchandise segera hadir!", Toast.LENGTH_SHORT).show()
         }
         itemBahasa.setOnClickListener {
-            Toast.makeText(this, "Ubah Bahasa Aplikasi", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Fitur Ubah Bahasa segera hadir!", Toast.LENGTH_SHORT).show()
         }
 
         // --- PESAN ---
         btnHistoryOrder.setOnClickListener {
-            Toast.makeText(this, "Riwayat Pesanan", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, HistoryActivity::class.java))
         }
         itemMetodePembayaran.setOnClickListener {
-            Toast.makeText(this, "Metode Pembayaran", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Fitur Metode Pembayaran segera hadir!", Toast.LENGTH_SHORT).show()
         }
         itemBulkOrder.setOnClickListener {
-            Toast.makeText(this, "Pesanan Jumlah Besar", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Fitur Pesanan Jumlah Besar segera hadir!", Toast.LENGTH_SHORT).show()
         }
 
         // --- MATCHA LIFESTYLE ---
         itemBantuan.setOnClickListener {
-            Toast.makeText(this, "Bantuan", Toast.LENGTH_SHORT).show()
+            startActivity(
+                Intent(this, WebViewActivity::class.java).apply {
+                    putExtra("TITLE", "Bantuan")
+                    putExtra("URL", "https://matchone.com/help") // ganti URL kamu
+                }
+            )
         }
+
         itemKebijakanPrivasi.setOnClickListener {
-            Toast.makeText(this, "Kebijakan Privasi", Toast.LENGTH_SHORT).show()
+            startActivity(
+                Intent(this, WebViewActivity::class.java).apply {
+                    putExtra("TITLE", "Kebijakan Privasi")
+                    putExtra("URL", "https://matchone.com/privacy") // ganti URL kamu
+                }
+            )
         }
+
         itemKetentuan.setOnClickListener {
-            Toast.makeText(this, "Ketentuan Layanan", Toast.LENGTH_SHORT).show()
+            startActivity(
+                Intent(this, WebViewActivity::class.java).apply {
+                    putExtra("TITLE", "Ketentuan Layanan")
+                    putExtra("URL", "https://matchone.com/terms") // ganti URL kamu
+                }
+            )
         }
+
         itemLaporMasalah.setOnClickListener {
-            Toast.makeText(this, "Lapor Masalah", Toast.LENGTH_SHORT).show()
+            val nomorWA = "6281234567890" // ganti nomor WhatsApp bisnis kamu
+            val intent = Intent(
+                Intent.ACTION_VIEW,
+                android.net.Uri.parse("https://wa.me/$nomorWA?text=Halo%20MatchOne%2C%20saya%20ingin%20melaporkan%20masalah!")
+            )
+            startActivity(intent)
         }
+
         itemWhatsapp.setOnClickListener {
-            Toast.makeText(this, "Layanan WhatsApp", Toast.LENGTH_SHORT).show()
+            val nomorWA = "6281234567890" // ganti nomor WhatsApp bisnis kamu
+            val intent = Intent(
+                Intent.ACTION_VIEW,
+                android.net.Uri.parse("https://wa.me/$nomorWA?text=Halo%20MatchOne%2C%20saya%20butuh%20bantuan!")
+            )
+            startActivity(intent)
         }
+
         itemTentang.setOnClickListener {
-            Toast.makeText(this, "Tentang Matcha Lifestyle", Toast.LENGTH_SHORT).show()
+            startActivity(
+                Intent(this, WebViewActivity::class.java).apply {
+                    putExtra("TITLE", "Tentang Matcha Lifestyle")
+                    putExtra("URL", "https://matchone.com/about") // ganti URL kamu
+                }
+            )
         }
 
         // --- LOGOUT ---
@@ -159,7 +200,6 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun setupBottomNav() {
-        // Highlight tab Profile aktif
         try {
             findViewById<TextView>(R.id.iconProfile)
                 .setTextColor(android.graphics.Color.parseColor("#2D5A27"))
@@ -180,7 +220,6 @@ class ProfileActivity : AppCompatActivity() {
         findViewById<LinearLayout>(R.id.navCart)?.setOnClickListener {
             startActivity(Intent(this, CartActivity::class.java))
         }
-        // navProfile sudah aktif di halaman ini, tidak perlu listener
     }
 
     private fun moveToLogin() {

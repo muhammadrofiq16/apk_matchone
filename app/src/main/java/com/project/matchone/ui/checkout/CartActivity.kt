@@ -1,5 +1,6 @@
 package com.project.matchone.ui.checkout
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
 import android.widget.Toast
@@ -146,25 +147,56 @@ class CartActivity : AppCompatActivity(), CartAdapter.OnCartListener {
         btnCheckout.isEnabled = false
         btnCheckout.text = "Memproses..."
         val token = "Bearer ${sessionManager.fetchAuthToken()}"
+
         ApiClient.instance.checkoutCart(token).enqueue(object : Callback<CheckoutResponse> {
-            override fun onResponse(call: Call<CheckoutResponse>, response: Response<CheckoutResponse>) {
+            override fun onResponse(
+                call: Call<CheckoutResponse>,
+                response: Response<CheckoutResponse>
+            ) {
                 btnCheckout.isEnabled = true
                 btnCheckout.text = "Checkout →"
-                if (response.isSuccessful) {
-                    Toast.makeText(this@CartActivity, "Pesanan berhasil dibuat!", Toast.LENGTH_LONG).show()
-                    val intent = android.content.Intent(this@CartActivity, PaymentActivity::class.java)
-                    intent.putExtra("EXTRA_TOTAL_AMOUNT", cartItems.sumOf { it.subtotal.toDouble() })
-                    response.body()?.transactionId?.let { intent.putExtra("EXTRA_TRANSACTION_ID", it) }
+
+                if (response.isSuccessful && response.body() != null) {
+                    val order = response.body()!!.order
+
+                    // Buat ringkasan item untuk struk
+                    val formatRupiah = NumberFormat.getCurrencyInstance(Locale("in", "ID"))
+                    val itemsSummary = order.orderItems.joinToString("\n") { item ->
+                        val subtotal = formatRupiah.format(
+                            (item.priceAtPurchase.toDoubleOrNull() ?: 0.0) * item.qty
+                        ).replace("Rp", "Rp ")
+                        "• Produk #${item.productId}  x${item.qty}  →  $subtotal"
+                    }
+
+                    // Buka StrukActivity dengan data order
+                    val intent = Intent(this@CartActivity, StrukActivity::class.java).apply {
+                        putExtra("INVOICE_NUMBER", order.invoiceNumber)
+                        putExtra("TOTAL_PRICE", order.totalPrice)
+                        putExtra("STATUS", order.status)
+                        putExtra("PAYMENT_METHOD", order.paymentMethod)
+                        putExtra("CREATED_AT", order.createdAt)
+                        putExtra("ITEMS_SUMMARY", itemsSummary)
+                    }
                     startActivity(intent)
                     finish()
+
                 } else {
-                    Toast.makeText(this@CartActivity, "Gagal: ${response.code()}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this@CartActivity,
+                        "Gagal checkout: ${response.code()}",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
+
             override fun onFailure(call: Call<CheckoutResponse>, t: Throwable) {
                 btnCheckout.isEnabled = true
                 btnCheckout.text = "Checkout →"
-                Toast.makeText(this@CartActivity, "Koneksi bermasalah: ${t.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    this@CartActivity,
+                    "Koneksi bermasalah: ${t.message}",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         })
     }
