@@ -61,7 +61,7 @@ class StrukActivity : AppCompatActivity() {
             val date = sdfIn.parse(createdAt)
             sdfOut.format(date!!)
         } catch (e: Exception) {
-            createdAt.substring(0, 10)
+            createdAt.take(10)
         }
 
         // Set data ke view

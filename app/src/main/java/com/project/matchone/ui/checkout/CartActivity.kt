@@ -103,9 +103,8 @@ class CartActivity : AppCompatActivity(), CartAdapter.OnCartListener {
     private fun updateTotal(items: List<CartItem>) {
         totalAmount = items.sumOf { it.subtotal.toDouble() }
 
-        val localeID = Locale("in", "ID")
-        val fmt = NumberFormat.getCurrencyInstance(localeID)
-        val formatted = fmt.format(totalAmount).replace("Rp", "Rp ")
+        val formatter = NumberFormat.getCurrencyInstance(Locale("in", "ID"))
+        val formatted = formatter.format(totalAmount).replace("Rp", "Rp ")
 
         tvTotalPrice.text = formatted
         tvTotalPriceBottom.text = formatted
@@ -181,6 +180,7 @@ class CartActivity : AppCompatActivity(), CartAdapter.OnCartListener {
             token = "Bearer $token",
             paymentMethod = selectedPaymentMethod
         ).enqueue(object : Callback<CheckoutResponse> {
+
             override fun onResponse(
                 call: Call<CheckoutResponse>,
                 response: Response<CheckoutResponse>
@@ -190,7 +190,6 @@ class CartActivity : AppCompatActivity(), CartAdapter.OnCartListener {
 
                 if (response.isSuccessful && response.body() != null) {
                     val checkoutResponse = response.body()!!
-
                     val orderId = checkoutResponse.order.id
 
                     if (orderId == 0) {
@@ -202,14 +201,30 @@ class CartActivity : AppCompatActivity(), CartAdapter.OnCartListener {
                         return
                     }
 
+                    val formatter = NumberFormat.getCurrencyInstance(Locale("in", "ID"))
+
+                    val itemsSummary = cartItems.joinToString("\n") { item ->
+                        val productName = if (item.name.isNotEmpty()) {
+                            item.name
+                        } else {
+                            "Produk #${item.product_id}"
+                        }
+
+                        val subtotal = formatter.format(item.subtotal).replace("Rp", "Rp ")
+
+                        "• $productName x${item.quantity} - $subtotal"
+                    }
+
                     val intent = Intent(this@CartActivity, PaymentActivity::class.java).apply {
                         putExtra("EXTRA_ORDER_ID", orderId)
                         putExtra("EXTRA_TOTAL_AMOUNT", totalAmount)
                         putExtra("EXTRA_PAYMENT_METHOD", selectedPaymentMethod)
+                        putExtra("EXTRA_ITEMS_SUMMARY", itemsSummary)
                     }
 
                     startActivity(intent)
-            overridePendingTransition(R.anim.fade_scale_in, R.anim.fade_scale_out)
+                    overridePendingTransition(R.anim.fade_scale_in, R.anim.fade_scale_out)
+
                 } else {
                     Toast.makeText(
                         this@CartActivity,
@@ -233,14 +248,16 @@ class CartActivity : AppCompatActivity(), CartAdapter.OnCartListener {
     }
 
     private fun setupBottomNavigation() {
-        val navHome    = findViewById<android.widget.LinearLayout>(R.id.navHome)
+        val navHome = findViewById<android.widget.LinearLayout>(R.id.navHome)
         val navCatalog = findViewById<android.widget.LinearLayout>(R.id.navCatalog)
-        val navCart    = findViewById<android.widget.LinearLayout>(R.id.navCart)
+        val navCart = findViewById<android.widget.LinearLayout>(R.id.navCart)
         val navProfile = findViewById<android.widget.LinearLayout>(R.id.navProfile)
 
-        // Highlight tab Cart aktif
-        findViewById<android.widget.ImageView>(R.id.iconCart).setColorFilter(android.graphics.Color.parseColor("#37563b"))
-        findViewById<TextView>(R.id.textCart).setTextColor(android.graphics.Color.parseColor("#37563b"))
+        findViewById<android.widget.ImageView>(R.id.iconCart)
+            .setColorFilter(android.graphics.Color.parseColor("#37563b"))
+
+        findViewById<TextView>(R.id.textCart)
+            .setTextColor(android.graphics.Color.parseColor("#37563b"))
 
         navHome.setOnClickListener {
             startActivity(Intent(this, com.project.matchone.ui.main.HomeActivity::class.java))
@@ -253,7 +270,7 @@ class CartActivity : AppCompatActivity(), CartAdapter.OnCartListener {
         }
 
         navCart.setOnClickListener {
-            // Sudah di Cart
+            // Sudah di halaman Cart
         }
 
         navProfile.setOnClickListener {
