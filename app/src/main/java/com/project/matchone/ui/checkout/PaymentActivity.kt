@@ -1,91 +1,150 @@
 package com.project.matchone.ui.checkout
 
+import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.RadioButton
-import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.button.MaterialButton
 import com.project.matchone.R
 import com.project.matchone.data.model.CartItem
-import com.project.matchone.data.model.Order
+import com.project.matchone.data.network.ApiClient
+import com.project.matchone.utils.CartRepository
+import com.project.matchone.utils.SessionManager
 import java.text.NumberFormat
 import java.util.Locale
-import java.util.UUID
 
-class PaymentActivity : AppCompatActivity() {
+class CartActivity : AppCompatActivity(), CartAdapter.OnCartListener {
 
-    private lateinit var tvTotalPayment: TextView
-    private lateinit var rgPaymentMethod: RadioGroup
-    private lateinit var btnConfirmPayment: Button
+    private lateinit var rvCart: RecyclerView
+    private lateinit var tvTotalPrice: TextView
+    private lateinit var tvTotalPriceBottom: TextView
+    private lateinit var tvSubtotal: TextView
+    private lateinit var btnBack: android.view.View
+    private lateinit var btnClear: android.view.View
+    private lateinit var btnCheckout: MaterialButton
+    private lateinit var btnTambahPesanan: TextView
+    private lateinit var cartAdapter: CartAdapter
+    private lateinit var sessionManager: SessionManager
+    private lateinit var cartRepository: CartRepository
 
-    private var totalAmount: Double = 0.0
-    // Tambahkan variabel untuk menampung data produk yang dibeli
-    private var cartItems: List<CartItem> = listOf()
+    private var cartItems: List<CartItem> = emptyList()
+    private var isUpdatingCart = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_payment)
+        setContentView(R.layout.activity_cart)
 
-        // 1. Inisialisasi View
-        tvTotalPayment = findViewById(R.id.tvTotalPayment)
-        rgPaymentMethod = findViewById(R.id.rgPaymentMethod)
-        btnConfirmPayment = findViewById(R.id.btnConfirmPayment)
+        sessionManager = SessionManager(this)
+        val token = sessionManager.fetchAuthToken() ?: ""
+        cartRepository = CartRepository(token)
 
-        // 2. Ambil total tagihan dari Intent (dikirim dari Cart)
-        totalAmount = intent.getDoubleExtra("EXTRA_TOTAL_AMOUNT", 0.0)
-
-        // TODO: Ambil data cartItems dari Intent atau Database Lokal (Room/SQLite)
-        // Jika dari Intent (Pastikan CartItem menggunakan implementasi Parcelable atau Serializable)
-        // cartItems = intent.getParcelableArrayListExtra<CartItem>("EXTRA_CART_ITEMS") ?: listOf()
-
-        // 3. Tampilkan format Rupiah
-        val formatRupiah = NumberFormat.getCurrencyInstance(Locale("in", "ID"))
-        tvTotalPayment.text = formatRupiah.format(totalAmount).replace("Rp", "Rp ")
-
-        // 4. Set aksi tombol konfirmasi
-        btnConfirmPayment.setOnClickListener {
-            processOrder()
-        }
+        initViews()
+        setupRecyclerView()
+        setupClickListeners()
+        loadCart()
     }
 
-    private fun processOrder() {
-        // Cek apakah metode pembayaran sudah dipilih
-        val selectedPaymentId = rgPaymentMethod.checkedRadioButtonId
-        if (selectedPaymentId == -1) {
-            Toast.makeText(this, "Silakan pilih metode pembayaran!", Toast.LENGTH_SHORT).show()
+    override fun onResume() {
+        super.onResume()
+        loadCart()
+    }
+
+    private fun initViews() {
+        rvCart              = findViewById(R.id.rvCart)
+        tvTotalPrice        = findViewById(R.id.tvTotalPrice)
+        tvTotalPriceBottom  = findViewById(R.id.tvTotalPriceBottom)
+        tvSubtotal          = findViewById(R.id.tvSubtotal)
+        btnBack             = findViewById(R.id.btnBack)
+        btnClear            = findViewById(R.id.btnClearCart)
+        btnCheckout         = findViewById(R.id.btnCheckout)
+        btnTambahPesanan    = findViewById(R.id.btnTambahPesanan)
+    }
+
+    private fun setupRecyclerView() {
+        rvCart.layoutManager = LinearLayoutManager(this)
+        cartAdapter = CartAdapter(emptyList(), this)
+        rvCart.adapter = cartAdapter
+    }
+
+    private fun setupClickListeners() {
+        btnBack.setOnClickListener { finish() }
+        btnTambahPesanan.setOnClickListener { finish() }
+        btnClear.setOnClickListener { clearAllCart() }
+        btnCheckout.setOnClickListener { processCheckout() }
+    }
+
+    private fun loadCart() {
+        btnCheckout.isEnabled = false
+        cartRepository.getCart(
+            onSuccess = { items ->
+                cartItems = items
+                cartAdapter.updateData(items)
+                btnCheckout.isEnabled = items.isNotEmpty()
+                updateTotal(items)
+            },
+            onError = { msg ->
+                btnCheckout.isEnabled = false
+                Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+            }
+        )
+    }
+
+    private fun updateTotal(items: List<CartItem>) {
+        val total = items.sumOf { it.subtotal.toDouble() }
+        val localeID = Locale("in", "ID")
+        val fmt = NumberFormat.getCurrencyInstance(localeID)
+        val formatted = fmt.format(total).replace("Rp", "Rp ")
+
+        tvTotalPrice.text       = formatted
+        tvTotalPriceBottom.text = formatted
+        tvSubtotal.text         = formatted
+    }
+
+    override fun onUpdateQuantity(id: Int, newQty: Int) {
+        if (isUpdatingCart) return
+        if (newQty <= 0) { onDeleteItem(id); return }
+        isUpdatingCart = true
+        cartRepository.updateCart(
+            cartId = id, newQuantity = newQty,
+            onSuccess = { isUpdatingCart = false; loadCart() },
+            onError = { msg -> isUpdatingCart = false; Toast.makeText(this, msg, Toast.LENGTH_SHORT).show() }
+        )
+    }
+
+    override fun onDeleteItem(id: Int) {
+        cartRepository.deleteItem(
+            cartId = id,
+            onSuccess = { loadCart() },
+            onError = { msg -> Toast.makeText(this, msg, Toast.LENGTH_SHORT).show() }
+        )
+    }
+
+    private fun clearAllCart() {
+        cartRepository.clearCart(
+            onSuccess = {
+                cartItems = emptyList()
+                cartAdapter.updateData(emptyList())
+                updateTotal(emptyList())
+                btnCheckout.isEnabled = false
+                Toast.makeText(this, "Keranjang dikosongkan", Toast.LENGTH_SHORT).show()
+            },
+            onError = { msg -> Toast.makeText(this, msg, Toast.LENGTH_SHORT).show() }
+        )
+    }
+
+    private fun processCheckout() {
+        if (cartItems.isEmpty()) {
+            Toast.makeText(this, "Keranjang masih kosong!", Toast.LENGTH_SHORT).show()
             return
         }
-
-        // Ambil nama metode pembayaran yang dipilih
-        val selectedRadioButton: RadioButton = findViewById(selectedPaymentId)
-        val paymentMethod = selectedRadioButton.text.toString()
-
-        // Generate ID Pesanan (misal: ORD-A1B2C3D4)
-        val newOrderId = "ORD-${UUID.randomUUID().toString().substring(0, 8).uppercase()}"
-
-        // BENTUK OBJEK ORDER (Sekarang sudah lengkap dengan items)
-        val order = Order(
-            orderId = newOrderId,
-            userId = "USER-123", // TODO: Nanti ganti dengan ID User yang sedang login
-            items = cartItems,   // -> INI PENTING: Memasukkan daftar produk ke dalam pesanan
-            totalAmount = totalAmount,
-            paymentMethod = paymentMethod,
-            status = "MENUNGGU_KONFIRMASI", // Status awal untuk diproses Admin
-            orderDate = System.currentTimeMillis()
-        )
-
-        saveOrderToDatabase(order)
-    }
-
-    private fun saveOrderToDatabase(order: Order) {
-        // Simulasi sukses:
-        Toast.makeText(this, "Pesanan ${order.orderId} sedang diproses!\nMetode: ${order.paymentMethod}", Toast.LENGTH_LONG).show()
-
-        // TODO: Taruh logika Firebase Firestore / Database di sini nanti
-
-        // Pindah ke halaman utama atau halaman "Sukses"
-        finish()
+        // Hitung total dan kirim ke PaymentActivity
+        val total = cartItems.sumOf { it.subtotal.toDouble() }
+        val intent = Intent(this, PaymentActivity::class.java).apply {
+            putExtra("EXTRA_TOTAL_AMOUNT", total)
+        }
+        startActivity(intent)
     }
 }

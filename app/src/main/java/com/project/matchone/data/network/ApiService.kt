@@ -104,9 +104,11 @@ interface ApiService {
         @Header("Authorization") token: String
     ): Call<CartSummary>
 
+    @FormUrlEncoded
     @POST("api/checkout")
     fun checkoutCart(
-        @Header("Authorization") token: String
+        @Header("Authorization") token: String,
+        @Field("payment_method") paymentMethod: String
     ): Call<CheckoutResponse>
 
     @GET("api/orders")
