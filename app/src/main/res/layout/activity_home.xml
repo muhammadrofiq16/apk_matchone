@@ -6,37 +6,40 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F9FAF5"
+    android:fitsSystemWindows="true"
     tools:context=".ui.main.HomeActivity">
 
     <!-- HEADER / TOP APP BAR -->
+
     <LinearLayout
         android:id="@+id/topAppBar"
         android:layout_width="match_parent"
-        android:layout_height="74dp"
-        android:orientation="horizontal"
-        android:gravity="bottom|center_horizontal"
-        android:paddingHorizontal="16dp"
+        android:layout_height="56dp"
         android:background="#EDEEE9"
         android:elevation="4dp"
-        app:layout_constraintTop_toTopOf="parent">
-        
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="0dp">
+
         <ImageView
             android:id="@+id/ivLogo"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:src="@drawable/logo" />
-            
+
         <TextView
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="MatchOne"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="#37563b"
+            android:layout_weight="1"
+            android:fontFamily="serif"
             android:gravity="center"
-            android:fontFamily="serif" />
-            
+            android:text="MatchOne"
+            android:textColor="#37563b"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
         <ImageView
             android:id="@+id/btnHeaderCart"
             android:layout_width="32dp"
@@ -208,7 +211,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="BESTSELLER"
-                        android:background="#4f6f52"
+                        android:background="#37563b"
                         android:textColor="#ccf0cc"
                         android:textSize="10sp"
                         android:textStyle="bold"
@@ -510,7 +513,7 @@
     <include
         layout="@layout/bottom_nav"
         android:layout_width="match_parent"
-        android:layout_height="76dp"
+        android:layout_height="56dp"
         app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

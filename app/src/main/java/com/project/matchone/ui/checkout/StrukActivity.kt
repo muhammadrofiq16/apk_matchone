@@ -92,9 +92,9 @@ class StrukActivity : AppCompatActivity() {
         tvStatusBadge.setTextColor(
             when (status) {
                 "pending"               -> android.graphics.Color.parseColor("#856404")
-                "paid", "completed"     -> android.graphics.Color.parseColor("#2D5A27")
+                "paid", "completed"     -> android.graphics.Color.parseColor("#37563b")
                 "cancelled"             -> android.graphics.Color.parseColor("#CC0000")
-                else                    -> android.graphics.Color.parseColor("#2D5A27")
+                else                    -> android.graphics.Color.parseColor("#37563b")
             }
         )
 
@@ -104,6 +104,7 @@ class StrukActivity : AppCompatActivity() {
             val i = Intent(this, HomeActivity::class.java)
             i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(i)
+            overridePendingTransition(R.anim.fade_scale_in, R.anim.fade_scale_out)
         }
     }
 
@@ -176,5 +177,10 @@ class StrukActivity : AppCompatActivity() {
             }
             startActivity(Intent.createChooser(shareIntent, "Bagikan Struk via"))
         }
+    }
+
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(R.anim.close_enter, R.anim.close_exit)
     }
 }

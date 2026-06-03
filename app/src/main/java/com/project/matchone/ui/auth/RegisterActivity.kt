@@ -64,6 +64,7 @@ class RegisterActivity : AppCompatActivity() {
                             Toast.makeText(this@RegisterActivity, "Registrasi Berhasil! Silakan Login.", Toast.LENGTH_SHORT).show()
                             val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
                             startActivity(intent)
+            overridePendingTransition(R.anim.fade_scale_in, R.anim.fade_scale_out)
                             finish()
                         } else {
                             Toast.makeText(this@RegisterActivity, "Registrasi Gagal: ${response.message()}", Toast.LENGTH_SHORT).show()
@@ -80,5 +81,10 @@ class RegisterActivity : AppCompatActivity() {
         tvBackToLogin.setOnClickListener {
             finish()
         }
+    }
+
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(R.anim.close_enter, R.anim.close_exit)
     }
 }

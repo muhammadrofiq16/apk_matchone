@@ -35,7 +35,7 @@ class HistoryAdapter(private val historyList: List<HistoryModel>) :
 
         // Logika warna status agar lebih keren
         when (item.status) {
-            "Selesai" -> holder.tvStatus.setTextColor(android.graphics.Color.parseColor("#4CAF50"))
+            "Selesai" -> holder.tvStatus.setTextColor(android.graphics.Color.parseColor("#37563b"))
             "Dibatalkan" -> holder.tvStatus.setTextColor(android.graphics.Color.RED)
             "Diproses" -> holder.tvStatus.setTextColor(android.graphics.Color.parseColor("#FF9800"))
         }

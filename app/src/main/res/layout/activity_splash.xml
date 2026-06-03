@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#2D5A27">
+    android:background="#F8F3ED">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -16,20 +16,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <TextView
-            android:id="@+id/tvSplashLogo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="🍵"
-            android:textSize="80sp"
-            android:gravity="center" />
+        <ImageView
+            android:id="@+id/ivSplashLogo"
+            android:layout_width="112dp"
+            android:layout_height="128dp"
+            android:layout_gravity="center"
+            android:src="@drawable/logo"
+            android:scaleType="fitCenter" />
 
         <TextView
             android:id="@+id/tvSplashBrand"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="MatchOne"
-            android:textColor="#FFFFFF"
+            android:textColor="#37563b"
             android:textSize="36sp"
             android:textStyle="bold"
             android:fontFamily="serif"

@@ -9,6 +9,8 @@ import com.project.matchone.data.model.OrderResponse
 import com.project.matchone.data.model.ProductResponse
 import com.project.matchone.data.model.UserModel
 import com.project.matchone.utils.CartResponse
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
@@ -110,6 +112,20 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Field("payment_method") paymentMethod: String
     ): Call<CheckoutResponse>
+
+    @Multipart
+    @POST("api/payments")
+    fun uploadPayment(
+        @Header("Authorization") token: String,
+
+        @Part("order_id") orderId: RequestBody,
+
+        @Part("payment_type") paymentType: RequestBody,
+
+        @Part("amount_paid") amountPaid: RequestBody,
+
+        @Part paymentProof: MultipartBody.Part
+    ): Call<ResponseBody>
 
     @GET("api/orders")
     fun getOrders(

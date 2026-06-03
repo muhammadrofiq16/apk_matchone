@@ -62,8 +62,8 @@ class CatalogActivity : AppCompatActivity() {
         val navProfile = findViewById<LinearLayout>(R.id.navProfile)
 
         // Highlight tab Catalog aktif
-        findViewById<TextView>(R.id.iconCatalog).setTextColor(android.graphics.Color.parseColor("#4CAF50"))
-        findViewById<TextView>(R.id.textCatalog).setTextColor(android.graphics.Color.parseColor("#4CAF50"))
+        findViewById<TextView>(R.id.iconCatalog).setTextColor(android.graphics.Color.parseColor("#37563b"))
+        findViewById<TextView>(R.id.textCatalog).setTextColor(android.graphics.Color.parseColor("#37563b"))
 
         rvCategories = findViewById(R.id.rvCategories)
         rvProducts   = findViewById(R.id.rvProducts)
@@ -188,6 +188,12 @@ class CatalogActivity : AppCompatActivity() {
         val intent = Intent(this, LoginActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
+            overridePendingTransition(R.anim.fade_scale_in, R.anim.fade_scale_out)
         finish()
+    }
+
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(R.anim.close_enter, R.anim.close_exit)
     }
 }

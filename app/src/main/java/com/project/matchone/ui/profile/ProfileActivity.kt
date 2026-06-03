@@ -293,9 +293,9 @@ class ProfileActivity : AppCompatActivity() {
     private fun setupBottomNav() {
         try {
             findViewById<TextView>(R.id.iconProfile)
-                .setTextColor(android.graphics.Color.parseColor("#2D5A27"))
+                .setTextColor(android.graphics.Color.parseColor("#37563b"))
             findViewById<TextView>(R.id.textProfile)
-                .setTextColor(android.graphics.Color.parseColor("#2D5A27"))
+                .setTextColor(android.graphics.Color.parseColor("#37563b"))
         } catch (e: Exception) { }
 
         findViewById<LinearLayout>(R.id.navHome)?.setOnClickListener {
@@ -315,6 +315,12 @@ class ProfileActivity : AppCompatActivity() {
         val intent = Intent(this, LoginActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
+            overridePendingTransition(R.anim.fade_scale_in, R.anim.fade_scale_out)
         finish()
+    }
+
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(R.anim.close_enter, R.anim.close_exit)
     }
 }

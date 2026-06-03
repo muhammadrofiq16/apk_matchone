@@ -7,6 +7,7 @@ import android.os.Looper
 import android.view.animation.AlphaAnimation
 import android.view.animation.AnimationSet
 import android.view.animation.ScaleAnimation
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.project.matchone.R
@@ -17,7 +18,7 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
-        val tvLogo     = findViewById<TextView>(R.id.tvSplashLogo)
+        val ivLogo     = findViewById<ImageView>(R.id.ivSplashLogo)
         val tvTagline  = findViewById<TextView>(R.id.tvSplashTagline)
         val tvBrand    = findViewById<TextView>(R.id.tvSplashBrand)
 
@@ -35,7 +36,7 @@ class SplashActivity : AppCompatActivity() {
             fillAfter = true
         }
 
-        tvLogo.startAnimation(animSet)
+        ivLogo.startAnimation(animSet)
 
         // Animasi fade untuk tagline (delay sedikit)
         val fadeInSlow = AlphaAnimation(0f, 1f).apply {
@@ -50,5 +51,10 @@ class SplashActivity : AppCompatActivity() {
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }, 3000)
+    }
+
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(R.anim.close_enter, R.anim.close_exit)
     }
 }
