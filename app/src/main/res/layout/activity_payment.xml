@@ -1,56 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5">
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    android:background="#F8F8F8">
 
-    <!-- App Bar -->
-    <com.google.android.material.appbar.AppBarLayout
+    <!-- ====== NAVIGATION HEADER ====== -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:elevation="0dp"
-        app:elevation="0dp">
+        android:layout_height="61dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:background="#FFFFFF"
+        android:elevation="1dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingStart="8dp"
-            android:paddingEnd="16dp"
-            android:background="#FFFFFF">
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_back"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Kembali"
+            android:layout_marginEnd="16dp"
+            app:tint="#374151" />
 
-            <ImageButton
-                android:id="@+id/btnBack"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@android:drawable/ic_media_previous"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/btn_back_desc"
-                app:tint="#333333"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pembayaran"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#111827" />
+    </LinearLayout>
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/title_payment_method"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="#1A1A1A"
-                android:layout_marginStart="8dp"/>
-        </LinearLayout>
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <!-- Scrollable Content -->
+    <!-- ====== SCROLLABLE MAIN CONTENT ====== -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:clipToPadding="false"
-        android:paddingBottom="100dp">
+        android:paddingBottom="16dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -58,390 +51,501 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Total Tagihan Card -->
-            <com.google.android.material.card.MaterialCardView
+            <!-- ====== BILLING CARD ====== -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:strokeWidth="0dp"
-                android:layout_marginBottom="20dp">
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="20dp"
+                android:background="@drawable/bg_section_card"
+                android:layout_marginBottom="16dp">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp"
-                    android:background="#FFFFFF">
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/label_payment_summary"
-                        android:textSize="13sp"
-                        android:textColor="#888888"
-                        android:layout_marginBottom="8dp"/>
+                        android:text="Total Tagihan"
+                        android:textSize="16sp"
+                        android:textColor="#4B5563" />
+                </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/tvTotalPayment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Rp 80.000"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="#37563b" />
+            </LinearLayout>
+
+            <!-- ====== VOUCHER BANNER ====== -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="12dp"
+                android:background="@drawable/bg_voucher_payment"
+                android:layout_marginBottom="16dp">
+
+                <!-- Voucher icon -->
+                <LinearLayout
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:gravity="center"
+                    android:background="@drawable/bg_voucher_icon_green"
+                    android:layout_marginEnd="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:text="🎫"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Voucher Pengiriman Aktif"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="#37563b" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hemat Rp 10rb"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="#37563b" />
+            </LinearLayout>
+
+            <!-- ====== PAYMENT METHODS SECTION ====== -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Pilih Metode Pembayaran"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#1F2937"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:layout_marginBottom="12dp" />
+
+            <!-- ===== TRANSFER BANK GROUP ===== -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_section_card"
+                android:layout_marginBottom="12dp">
+
+                <!-- Transfer Bank Header -->
+                <LinearLayout
+                    android:id="@+id/cardTransfer"
+                    android:layout_width="match_parent"
+                    android:layout_height="57dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground">
+
+                    <View
+                        android:id="@+id/radioTransfer"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:background="@drawable/bg_radio_unselected"
+                        android:layout_marginEnd="12dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Transfer Bank"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="#374151" />
+                </LinearLayout>
+
+                <!-- Divider -->
+                <View
+                    android:id="@+id/dividerTransfer"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#F3F4F6"
+                    android:visibility="gone" />
+
+                <!-- Sub-options container (hidden by default) -->
+                <LinearLayout
+                    android:id="@+id/transferSubOptions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="8dp"
+                    android:background="#F9FAFB"
+                    android:visibility="gone">
+
+                    <!-- BCA Virtual Account -->
+                    <LinearLayout
+                        android:id="@+id/optionBca"
+                        android:layout_width="match_parent"
+                        android:layout_height="46dp"
                         android:orientation="horizontal"
                         android:gravity="center_vertical"
-                        android:baselineAligned="false">
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:background="@drawable/bg_sub_option"
+                        android:layout_marginBottom="8dp"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <View
+                            android:id="@+id/radioBca"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:background="@drawable/bg_radio_unselected"
+                            android:layout_marginEnd="12dp" />
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/label_total_bill"
-                            android:textSize="16sp"
-                            android:textColor="#333333"/>
+                            android:text="BCA Virtual Account"
+                            android:textSize="14sp"
+                            android:textColor="#111827" />
+
+                        <View
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:background="#1A4789" />
+                    </LinearLayout>
+
+                    <!-- Mandiri Bill Payment -->
+                    <LinearLayout
+                        android:id="@+id/optionMandiri"
+                        android:layout_width="match_parent"
+                        android:layout_height="46dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:background="@drawable/bg_sub_option"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <View
+                            android:id="@+id/radioMandiri"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:background="@drawable/bg_radio_unselected"
+                            android:layout_marginEnd="12dp" />
 
                         <TextView
-                            android:id="@+id/tvTotalPayment"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="@string/default_price"
-                            android:textSize="20sp"
-                            android:textStyle="bold"
-                            android:textColor="#2E7D32"/>
+                            android:layout_weight="1"
+                            android:text="Mandiri Bill Payment"
+                            android:textSize="14sp"
+                            android:textColor="#111827" />
+
+                        <View
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:background="#003D79" />
                     </LinearLayout>
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
 
-            <!-- Label E-Wallet -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/label_e_wallet"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:textColor="#555555"
-                android:layout_marginBottom="10dp"
-                android:layout_marginStart="4dp"/>
-
-            <!-- Row: DANA + GoPay -->
+            <!-- ===== E-WALLET GROUP ===== -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:baselineAligned="false"
-                android:layout_marginBottom="10dp">
+                android:orientation="vertical"
+                android:background="@drawable/bg_section_card"
+                android:layout_marginBottom="12dp">
 
-                <!-- DANA -->
+                <!-- E-Wallet Header -->
                 <LinearLayout
-                    android:id="@+id/cardDana"
-                    android:layout_width="0dp"
-                    android:layout_height="80dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:layout_marginEnd="6dp"
-                    android:background="@drawable/bg_payment_card"
+                    android:id="@+id/cardEwallet"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="58dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
                     android:clickable="true"
-                    android:focusable="true">
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground">
+
+                    <View
+                        android:id="@+id/radioEwallet"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/bg_radio_unselected"
+                        android:layout_marginEnd="12dp" />
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="@string/payment_dana_icon"
-                        android:textSize="24sp"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/payment_dana"
-                        android:textSize="13sp"
+                        android:layout_weight="1"
+                        android:text="E-Wallet (GoPay / ShopeePay /\nDana)"
+                        android:textSize="16sp"
                         android:textStyle="bold"
-                        android:textColor="#118EEA"
-                        android:layout_marginTop="4dp"/>
+                        android:textColor="#374151" />
+
+                    <!-- Wallet icons -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:background="@drawable/bg_circle_blue" />
+
+                        <View
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:background="@drawable/bg_circle_orange_wallet"
+                            android:layout_marginStart="-4dp" />
+                    </LinearLayout>
                 </LinearLayout>
 
-                <!-- GoPay -->
-                <LinearLayout
-                    android:id="@+id/cardGopay"
-                    android:layout_width="0dp"
-                    android:layout_height="80dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:layout_marginStart="6dp"
-                    android:background="@drawable/bg_payment_card"
-                    android:clickable="true"
-                    android:focusable="true">
+                <!-- Divider -->
+                <View
+                    android:id="@+id/dividerEwallet"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#F3F4F6"
+                    android:visibility="gone" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/payment_gopay_icon"
-                        android:textSize="24sp"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/payment_gopay"
-                        android:textSize="13sp"
-                        android:textStyle="bold"
-                        android:textColor="#00880A"
-                        android:layout_marginTop="4dp"/>
+                <!-- E-Wallet Sub-options (hidden by default) -->
+                <LinearLayout
+                    android:id="@+id/ewalletSubOptions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="8dp"
+                    android:background="#F9FAFB"
+                    android:visibility="gone">
+
+                    <!-- GoPay -->
+                    <LinearLayout
+                        android:id="@+id/optionGopay"
+                        android:layout_width="match_parent"
+                        android:layout_height="46dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:background="@drawable/bg_sub_option"
+                        android:layout_marginBottom="8dp"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <View
+                            android:id="@+id/radioGopay"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:background="@drawable/bg_radio_unselected"
+                            android:layout_marginEnd="12dp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="GoPay"
+                            android:textSize="14sp"
+                            android:textColor="#111827" />
+                    </LinearLayout>
+
+                    <!-- ShopeePay -->
+                    <LinearLayout
+                        android:id="@+id/optionShopeepay"
+                        android:layout_width="match_parent"
+                        android:layout_height="46dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:background="@drawable/bg_sub_option"
+                        android:layout_marginBottom="8dp"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <View
+                            android:id="@+id/radioShopeepay"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:background="@drawable/bg_radio_unselected"
+                            android:layout_marginEnd="12dp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="ShopeePay"
+                            android:textSize="14sp"
+                            android:textColor="#111827" />
+                    </LinearLayout>
+
+                    <!-- Dana -->
+                    <LinearLayout
+                        android:id="@+id/optionDana"
+                        android:layout_width="match_parent"
+                        android:layout_height="46dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:background="@drawable/bg_sub_option"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <View
+                            android:id="@+id/radioDana"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:background="@drawable/bg_radio_unselected"
+                            android:layout_marginEnd="12dp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Dana"
+                            android:textSize="14sp"
+                            android:textColor="#111827" />
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- Row: OVO + ShopeePay -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:baselineAligned="false"
-                android:layout_marginBottom="20dp">
-
-                <!-- OVO -->
-                <LinearLayout
-                    android:id="@+id/cardOvo"
-                    android:layout_width="0dp"
-                    android:layout_height="80dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:layout_marginEnd="6dp"
-                    android:background="@drawable/bg_payment_card"
-                    android:clickable="true"
-                    android:focusable="true">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/payment_ovo_icon"
-                        android:textSize="24sp"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/payment_ovo"
-                        android:textSize="13sp"
-                        android:textStyle="bold"
-                        android:textColor="#4C3494"
-                        android:layout_marginTop="4dp"/>
-                </LinearLayout>
-
-                <!-- ShopeePay -->
-                <LinearLayout
-                    android:id="@+id/cardShopeepay"
-                    android:layout_width="0dp"
-                    android:layout_height="80dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:layout_marginStart="6dp"
-                    android:background="@drawable/bg_payment_card"
-                    android:clickable="true"
-                    android:focusable="true">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/payment_shopeepay_icon"
-                        android:textSize="24sp"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/payment_shopeepay"
-                        android:textSize="13sp"
-                        android:textStyle="bold"
-                        android:textColor="#EE4D2D"
-                        android:layout_marginTop="4dp"/>
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Label Lainnya -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/label_other"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:textColor="#555555"
-                android:layout_marginBottom="10dp"
-                android:layout_marginStart="4dp"/>
-
-            <!-- Midtrans -->
-            <LinearLayout
-                android:id="@+id/cardMidtrans"
-                android:layout_width="match_parent"
-                android:layout_height="64dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:baselineAligned="false"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/bg_payment_card"
-                android:clickable="true"
-                android:focusable="true">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/payment_midtrans_icon"
-                    android:textSize="22sp"
-                    android:layout_marginEnd="12dp"/>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/payment_midtrans"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:textColor="#1A1A1A"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/payment_midtrans_desc"
-                        android:textSize="12sp"
-                        android:textColor="#888888"/>
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/ivCheckMidtrans"
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:text="@string/icon_arrow"
-                    android:textSize="20sp"
-                    android:textColor="#CCCCCC"
-                    android:gravity="center"/>
-            </LinearLayout>
-
-            <!-- Transfer Bank -->
-            <LinearLayout
-                android:id="@+id/cardTransfer"
-                android:layout_width="match_parent"
-                android:layout_height="64dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:baselineAligned="false"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/bg_payment_card"
-                android:clickable="true"
-                android:focusable="true">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/payment_transfer_icon"
-                    android:textSize="22sp"
-                    android:layout_marginEnd="12dp"/>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/payment_transfer"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:textColor="#1A1A1A"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/payment_transfer_desc"
-                        android:textSize="12sp"
-                        android:textColor="#888888"/>
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:text="@string/icon_arrow"
-                    android:textSize="20sp"
-                    android:textColor="#CCCCCC"
-                    android:gravity="center"/>
-            </LinearLayout>
-
-            <!-- COD -->
+            <!-- ===== COD OPTION ===== -->
             <LinearLayout
                 android:id="@+id/cardCod"
                 android:layout_width="match_parent"
-                android:layout_height="64dp"
+                android:layout_height="58dp"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:baselineAligned="false"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/bg_payment_card"
+                android:background="@drawable/bg_section_card"
+                android:layout_marginBottom="16dp"
                 android:clickable="true"
                 android:focusable="true">
+
+                <View
+                    android:id="@+id/radioCod"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/bg_radio_unselected"
+                    android:layout_marginEnd="12dp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Bayar di Tempat (COD)"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#374151" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/payment_cod_icon"
-                    android:textSize="22sp"
-                    android:layout_marginEnd="12dp"/>
+                    android:text="💵"
+                    android:textSize="20sp" />
+            </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/payment_cod"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:textColor="#1A1A1A"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/payment_cod_desc"
-                        android:textSize="12sp"
-                        android:textColor="#888888"/>
-                </LinearLayout>
+            <!-- ===== BUKTI PEMBAYARAN (hidden for COD) ===== -->
+            <LinearLayout
+                android:id="@+id/proofSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:background="@drawable/bg_section_card"
+                android:visibility="gone">
 
                 <TextView
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:text="@string/icon_arrow"
-                    android:textSize="20sp"
-                    android:textColor="#CCCCCC"
-                    android:gravity="center"/>
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Bukti Pembayaran"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:textColor="#1F2937"
+                    android:layout_marginBottom="8dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Upload screenshot atau foto bukti pembayaran agar kasir bisa mengkonfirmasi pesananmu."
+                    android:textSize="12sp"
+                    android:textColor="#6B7280"
+                    android:layout_marginBottom="12dp" />
+
+                <ImageView
+                    android:id="@+id/ivProofPreview"
+                    android:layout_width="match_parent"
+                    android:layout_height="180dp"
+                    android:layout_marginBottom="12dp"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone"
+                    android:background="#F3F4F6"
+                    android:contentDescription="Preview bukti pembayaran" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSelectProof"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:text="Pilih Bukti Pembayaran"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:backgroundTint="#FFFFFF"
+                    android:textColor="#37563b"
+                    app:strokeColor="#37563b"
+                    app:strokeWidth="1dp"
+                    app:cornerRadius="10dp" />
             </LinearLayout>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Bottom Bar: Tombol Konfirmasi -->
+    <!-- ====== FOOTER ACTION ====== -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:background="#FFFFFF"
-        android:elevation="8dp"
+        android:orientation="vertical"
         android:padding="16dp"
-        android:orientation="vertical">
+        android:background="#FFFFFF"
+        android:elevation="8dp">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnConfirmPayment"
             android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:text="@string/btn_confirm_payment"
+            android:layout_height="56dp"
+            android:text="Konfirmasi Pesanan"
             android:textSize="16sp"
             android:textStyle="bold"
+            android:textAllCaps="false"
             android:enabled="false"
             android:alpha="0.5"
-            app:backgroundTint="#2E7D32"
-            app:cornerRadius="12dp"/>
+            app:backgroundTint="#37563b"
+            app:cornerRadius="12dp" />
     </LinearLayout>
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</LinearLayout>

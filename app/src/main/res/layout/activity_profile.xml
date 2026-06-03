@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F5F5F0"
+    android:fitsSystemWindows="true"
     tools:context=".ui.profile.ProfileActivity">
 
     <!-- ========================= -->
@@ -18,7 +19,7 @@
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:paddingHorizontal="16dp"
-        android:background="#2D5A27"
+        android:background="#37563b"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
@@ -26,7 +27,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@android:drawable/ic_media_previous"
+            android:src="@drawable/ic_back"
             app:tint="#FFFFFF" />
 
         <TextView
@@ -173,7 +174,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="4dp"
                                     android:text="Starter"
-                                    android:textColor="#2D5A27"
+                                    android:textColor="#37563b"
                                     android:textSize="13sp"
                                     android:textStyle="bold" />
                             </LinearLayout>
@@ -219,7 +220,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="0 poin"
-                                android:textColor="#2D5A27"
+                                android:textColor="#37563b"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
@@ -250,7 +251,7 @@
                         android:layout_marginTop="8dp"
                         android:max="100"
                         android:progress="0"
-                        android:progressTint="#2D5A27"
+                        android:progressTint="#37563b"
                         android:progressBackgroundTint="#E0E0E0" />
 
                 </LinearLayout>
@@ -285,7 +286,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="✦"
-                            android:textColor="#2D5A27"
+                            android:textColor="#37563b"
                             android:textSize="14sp" />
 
                         <TextView
@@ -316,7 +317,7 @@
                         android:textColor="#FFFFFF"
                         android:textSize="14sp"
                         android:textStyle="bold"
-                        app:backgroundTint="#2D5A27"
+                        app:backgroundTint="#37563b"
                         app:cornerRadius="10dp"
                         app:icon="@android:drawable/ic_dialog_dialer"
                         app:iconTint="#FFFFFF" />
@@ -613,7 +614,7 @@
         android:id="@+id/bottomNavContainer"
         layout="@layout/bottom_nav"
         android:layout_width="match_parent"
-        android:layout_height="76dp"
+        android:layout_height="56dp"
         app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

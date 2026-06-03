@@ -29,7 +29,7 @@
                 android:orientation="vertical"
                 android:gravity="center"
                 android:paddingVertical="28dp"
-                android:background="#2D5A27">
+                android:background="#37563b">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -69,7 +69,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="✓ Pesanan Diterima"
-                    android:textColor="#2D5A27"
+                    android:textColor="#37563b"
                     android:textSize="14sp"
                     android:textStyle="bold"
                     android:background="#D4EDDA"
@@ -209,7 +209,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Gratis"
-                        android:textColor="#2D5A27"
+                        android:textColor="#37563b"
                         android:textSize="13sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -247,7 +247,7 @@
                 android:gravity="center_vertical"
                 android:paddingHorizontal="24dp"
                 android:paddingVertical="16dp"
-                android:background="#2D5A27">
+                android:background="#37563b">
 
                 <TextView
                     android:layout_width="0dp"
@@ -289,7 +289,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Your Daily Ritual, Refined. 🍵"
-                    android:textColor="#2D5A27"
+                    android:textColor="#37563b"
                     android:textSize="12sp"
                     android:textStyle="italic"
                     android:layout_marginTop="4dp" />
@@ -312,10 +312,10 @@
                 android:layout_weight="1"
                 android:layout_marginEnd="8dp"
                 android:text="⬇ Simpan"
-                android:textColor="#2D5A27"
+                android:textColor="#37563b"
                 android:textAllCaps="false"
                 android:textStyle="bold"
-                app:strokeColor="#2D5A27"
+                app:strokeColor="#37563b"
                 app:cornerRadius="12dp" />
 
             <com.google.android.material.button.MaterialButton
@@ -326,10 +326,10 @@
                 android:layout_weight="1"
                 android:layout_marginStart="8dp"
                 android:text="↗ Bagikan"
-                android:textColor="#2D5A27"
+                android:textColor="#37563b"
                 android:textAllCaps="false"
                 android:textStyle="bold"
-                app:strokeColor="#2D5A27"
+                app:strokeColor="#37563b"
                 app:cornerRadius="12dp" />
         </LinearLayout>
 
@@ -342,7 +342,7 @@
             android:textAllCaps="false"
             android:textColor="#FFFFFF"
             android:textStyle="bold"
-            app:backgroundTint="#2D5A27"
+            app:backgroundTint="#37563b"
             app:cornerRadius="12dp" />
 
     </LinearLayout>

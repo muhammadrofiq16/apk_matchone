@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
+    android:fitsSystemWindows="true"
     tools:context=".ui.main.CatalogActivity">
 
     <!-- ========================= -->
@@ -184,7 +185,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="40%"
-                                    android:textColor="#00A86B"
+                                    android:textColor="#37563b"
                                     android:textSize="21sp"
                                     android:textStyle="bold" />
 
@@ -227,7 +228,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="60%"
-                                    android:textColor="#00A86B"
+                                    android:textColor="#37563b"
                                     android:textSize="21sp"
                                     android:textStyle="bold" />
 
@@ -269,7 +270,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="50%"
-                                    android:textColor="#00A86B"
+                                    android:textColor="#37563b"
                                     android:textSize="21sp"
                                     android:textStyle="bold" />
 
@@ -389,7 +390,7 @@
     <include
         layout="@layout/bottom_nav"
         android:layout_width="match_parent"
-        android:layout_height="76dp"
+        android:layout_height="56dp"
         app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
