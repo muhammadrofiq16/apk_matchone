@@ -1,3 +1,44 @@
-<resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="Typos">
+
+    <!-- App -->
     <string name="app_name">MatchOne</string>
+
+    <!-- Activity Payment - AppBar -->
+    <string name="btn_back_desc">Kembali</string>
+    <string name="title_payment_method">Metode Pembayaran</string>
+
+    <!-- Activity Payment - Summary Card -->
+    <string name="label_payment_summary">Ringkasan Pembayaran</string>
+    <string name="label_total_bill">Total Tagihan</string>
+    <string name="default_price">Rp 0</string>
+
+    <!-- Activity Payment - E-Wallet Section -->
+    <string name="label_e_wallet">E-Wallet</string>
+    <string name="payment_dana_icon">\uD83D\uDC99</string>
+    <string name="payment_dana">DANA</string>
+    <string name="payment_gopay_icon">\uD83D\uDC9A</string>
+    <string name="payment_gopay">GoPay</string>
+    <string name="payment_ovo_icon">\uD83D\uDC9C</string>
+    <string name="payment_ovo">OVO</string>
+    <string name="payment_shopeepay_icon">\uD83E\uDDE1</string>
+    <string name="payment_shopeepay">ShopeePay</string>
+
+    <!-- Activity Payment - Other Section -->
+    <string name="label_other">Lainnya</string>
+    <string name="payment_midtrans_icon">\uD83D\uDCB3</string>
+    <string name="payment_midtrans">Midtrans</string>
+    <string name="payment_midtrans_desc">Kartu kredit / debit &amp; virtual account</string>
+    <string name="payment_transfer_icon">\uD83C\uDFE6</string>
+    <string name="payment_transfer">Transfer Bank</string>
+    <string name="payment_transfer_desc">BCA, Mandiri, BRI, BNI</string>
+    <string name="payment_cod_icon">\uD83D\uDCB5</string>
+    <string name="payment_cod">Bayar di Tempat (COD)</string>
+    <string name="payment_cod_desc">Bayar saat pesanan tiba</string>
+
+    <!-- Activity Payment - Arrow & Button -->
+    <string name="icon_arrow">&#8250;</string>
+    <string name="btn_confirm_payment">Konfirmasi Pembayaran</string>
+
 </resources>
