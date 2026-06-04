@@ -3,6 +3,24 @@
     <style name="Base.Theme.MatchOne" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+
+        <!-- Smooth activity transitions -->
+        <item name="android:windowAnimationStyle">@style/ActivityTransition</item>
+
+        <!-- System bar: tidak transparan, konten tidak nabrak -->
+        <item name="android:statusBarColor">#37563b</item>
+        <item name="android:navigationBarColor">#FFFFFF</item>
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+    </style>
+
+    <!-- Smooth fade + scale transition for all activities -->
+    <style name="ActivityTransition" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/fade_scale_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/fade_scale_out</item>
+        <item name="android:activityCloseEnterAnimation">@anim/close_enter</item>
+        <item name="android:activityCloseExitAnimation">@anim/close_exit</item>
     </style>
 
     <style name="Theme.MatchOne" parent="Base.Theme.MatchOne" />

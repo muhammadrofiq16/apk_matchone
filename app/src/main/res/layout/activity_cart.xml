@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:background="#F2F4F3">
 
     <!-- ================================ -->
@@ -74,9 +75,7 @@
                         android:id="@+id/btnBack"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:background="@drawable/bg_icon_btn"
-                        android:src="@android:drawable/ic_media_previous"
-                        app:tint="#FFFFFF" />
+                        android:src="@drawable/ic_back" />
 
                     <View
                         android:layout_width="0dp"
@@ -108,7 +107,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:paddingBottom="110dp"
+        android:paddingBottom="156dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -145,7 +144,7 @@
                     android:paddingHorizontal="16dp"
                     android:background="@drawable/bg_add_order_modern"
                     android:text="+ Tambah"
-                    android:textColor="#2D5A27"
+                    android:textColor="#37563b"
                     android:textSize="13sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -191,7 +190,7 @@
                     android:gravity="center"
                     android:text="%"
                     android:background="@drawable/bg_voucher_icon_modern"
-                    android:textColor="#2D5A27"
+                    android:textColor="#37563b"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -214,7 +213,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="1 voucher tersedia"
-                        android:textColor="#4CAF50"
+                        android:textColor="#37563b"
                         android:textSize="12sp" />
                 </LinearLayout>
 
@@ -296,7 +295,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Gratis"
-                            android:textColor="#4CAF50"
+                            android:textColor="#37563b"
                             android:textSize="14sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -327,7 +326,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Rp 0"
-                            android:textColor="#2D5A27"
+                            android:textColor="#37563b"
                             android:textSize="20sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -344,9 +343,11 @@
     <LinearLayout
         android:id="@+id/layoutSummary"
         android:layout_width="match_parent"
-        android:layout_height="88dp"
+        android:layout_height="72dp"
         android:layout_gravity="bottom"
-        android:background="@drawable/bg_checkout_bar"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="68dp"
+        android:background="@drawable/bg_checkout_popup"
         android:elevation="16dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
@@ -389,5 +390,15 @@
             app:cornerRadius="27dp" />
 
     </LinearLayout>
+
+    <!-- ========================= -->
+    <!-- BOTTOM NAVIGATION         -->
+    <!-- ========================= -->
+    <include
+        android:id="@+id/bottomNavContainer"
+        layout="@layout/bottom_nav"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

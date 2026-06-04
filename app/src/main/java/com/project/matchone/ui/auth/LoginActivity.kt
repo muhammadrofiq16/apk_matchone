@@ -158,4 +158,9 @@ class LoginActivity : AppCompatActivity() {
             }
         })
     }
+
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(R.anim.close_enter, R.anim.close_exit)
+    }
 }

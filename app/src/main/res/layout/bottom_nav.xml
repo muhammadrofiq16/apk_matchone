@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/bottomNavContainer"
     android:layout_width="match_parent"
-    android:layout_height="76dp"
+    android:layout_height="56dp"
     android:background="#FFFFFF"
     android:elevation="12dp"
     android:gravity="center"
@@ -25,7 +26,7 @@
             android:gravity="center"
             android:text="⌂"
             android:textColor="#9A9A9A"
-            android:textSize="26sp" />
+            android:textSize="22sp" />
 
         <TextView
             android:id="@+id/textHome"
@@ -53,7 +54,7 @@
             android:gravity="center"
             android:text="⊞"
             android:textColor="#9A9A9A"
-            android:textSize="26sp" />
+            android:textSize="22sp" />
 
         <TextView
             android:id="@+id/textCatalog"
@@ -74,14 +75,14 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <TextView
+        <ImageView
             android:id="@+id/iconCart"
             android:layout_width="34dp"
             android:layout_height="34dp"
-            android:gravity="center"
-            android:text="🛒"
-            android:textColor="#9A9A9A"
-            android:textSize="22sp" />
+            android:layout_gravity="center"
+            android:padding="4dp"
+            android:src="@drawable/ic_cart"
+            app:tint="#9A9A9A" />
 
         <TextView
             android:id="@+id/textCart"
@@ -102,14 +103,13 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/iconProfile"
-            android:layout_width="34dp"
-            android:layout_height="34dp"
-            android:gravity="center"
-            android:text="◎"
-            android:textColor="#9A9A9A"
-            android:textSize="26sp" />
+            <ImageView
+                android:id="@+id/iconProfile"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:gravity="center"
+                android:src="@drawable/ic_profile"
+                app:tint="#9A9A9A" />
 
         <TextView
             android:id="@+id/textProfile"

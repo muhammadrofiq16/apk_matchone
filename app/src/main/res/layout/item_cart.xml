@@ -52,7 +52,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="Rp 0"
-                android:textColor="#2D5A27"
+                android:textColor="#37563b"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
@@ -91,7 +91,7 @@
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="Tambah"
                     android:src="@drawable/ic_plus"
-                    app:tint="#2D5A27" />
+                    app:tint="#37563b" />
             </LinearLayout>
         </LinearLayout>
 

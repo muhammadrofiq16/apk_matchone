@@ -2,6 +2,13 @@
     <style name="Base.Theme.MatchOne" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Animasi transisi global -->
         <item name="android:windowAnimationStyle">@style/SlideAnimation</item>
+
+        <!-- System bar: tidak transparan, konten tidak nabrak -->
+        <item name="android:statusBarColor">#37563b</item>
+        <item name="android:navigationBarColor">#FFFFFF</item>
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
 
     <style name="Theme.MatchOne" parent="Base.Theme.MatchOne" />

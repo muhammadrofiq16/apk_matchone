@@ -175,4 +175,8 @@ class WebViewActivity : AppCompatActivity() {
         <body>$body</body>
         </html>
     """.trimIndent()
+
+    override fun finish() {
+        super.finish()
+    }
 }

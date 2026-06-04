@@ -1,14 +1,13 @@
 package com.project.matchone.ui.profile
 
-import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
-import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
-import android.widget.ProgressBar
+import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.button.MaterialButton
 import com.project.matchone.R
@@ -35,245 +34,81 @@ class ProfileActivity : AppCompatActivity() {
         sessionManager = SessionManager(this)
 
         // --- INISIALISASI VIEW ---
-        val tvProfileName   = findViewById<TextView>(R.id.tvProfileName)
-        val tvProfileEmail  = findViewById<TextView>(R.id.tvProfileEmail)
-        val tvLevel         = findViewById<TextView>(R.id.tvLevel)
-        val tvPoints        = findViewById<TextView>(R.id.tvPoints)
-        val tvNextLevel     = findViewById<TextView>(R.id.tvNextLevel)
-        val progressPoints  = findViewById<ProgressBar>(R.id.progressPoints)
-        val tvEditProfil    = findViewById<TextView>(R.id.tvEditProfil)
-        val btnBack         = findViewById<ImageButton>(R.id.btnBackProfile)
-        val btnGabung       = findViewById<MaterialButton>(R.id.btnGabungWhatsapp)
-        val btnLogout       = findViewById<MaterialButton>(R.id.btnLogout)
-
-        // Section Akun
-        val itemKotakMasuk  = findViewById<LinearLayout>(R.id.itemKotakMasuk)
-        val itemAlamat      = findViewById<LinearLayout>(R.id.itemAlamat)
-        val itemScan        = findViewById<LinearLayout>(R.id.itemScan)
-        val itemBahasa      = findViewById<LinearLayout>(R.id.itemBahasa)
-
-        // Section Pesan
+        val btnBack              = findViewById<ImageButton>(R.id.btnBack)
+        val tvProfileName        = findViewById<TextView>(R.id.tvProfileName)
+        val tvProfileEmail       = findViewById<TextView>(R.id.tvProfileEmail)
+        val itemUbahPassword     = findViewById<LinearLayout>(R.id.itemUbahPassword)
         val btnHistoryOrder      = findViewById<LinearLayout>(R.id.btnHistoryOrder)
-        val itemMetodePembayaran = findViewById<LinearLayout>(R.id.itemMetodePembayaran)
-        val itemBulkOrder        = findViewById<LinearLayout>(R.id.itemBulkOrder)
-
-        // Section Matcha Lifestyle
-        val itemBantuan          = findViewById<LinearLayout>(R.id.itemBantuan)
+        val switchNotifikasi     = findViewById<Switch>(R.id.switchNotifikasi)
         val itemKebijakanPrivasi = findViewById<LinearLayout>(R.id.itemKebijakanPrivasi)
-        val itemKetentuan        = findViewById<LinearLayout>(R.id.itemKetentuan)
-        val itemLaporMasalah     = findViewById<LinearLayout>(R.id.itemLaporMasalah)
-        val itemWhatsapp         = findViewById<LinearLayout>(R.id.itemWhatsapp)
-        val itemTentang          = findViewById<LinearLayout>(R.id.itemTentang)
+        val itemBantuan          = findViewById<LinearLayout>(R.id.itemBantuan)
+        val btnLogout            = findViewById<MaterialButton>(R.id.btnLogout)
 
-        // --- LOAD DATA PROFIL ---
-        loadUserProfile(tvProfileName, tvProfileEmail, tvLevel, tvPoints, tvNextLevel, progressPoints)
+        // --- LOAD PROFIL ---
+        loadUserProfile(tvProfileName, tvProfileEmail)
 
-        // --- TOMBOL BACK ---
+        // --- BACK ---
         btnBack.setOnClickListener { finish() }
 
-        // --- EDIT PROFIL ---
-        tvEditProfil.setOnClickListener {
-            showEditProfilDialog(tvProfileName)
+        // --- KEAMANAN ---
+        itemUbahPassword.setOnClickListener {
+            Toast.makeText(this, "Fitur Ubah Kata Sandi segera hadir!", Toast.LENGTH_SHORT).show()
         }
 
-        // --- GABUNG WHATSAPP ---
-        btnGabung.setOnClickListener {
-            val nomorWA = "6281234567890"
-            startActivity(Intent(Intent.ACTION_VIEW,
-                android.net.Uri.parse("https://wa.me/$nomorWA?text=Halo%20MatchOne%2C%20saya%20ingin%20bergabung!")))
-        }
-
-        // --- AKUN ---
-        itemKotakMasuk.setOnClickListener {
-            Toast.makeText(this, "Fitur Kotak Masuk segera hadir!", Toast.LENGTH_SHORT).show()
-        }
-        itemAlamat.setOnClickListener {
-            Toast.makeText(this, "Fitur Alamat Pengiriman segera hadir!", Toast.LENGTH_SHORT).show()
-        }
-        itemScan.setOnClickListener {
-            Toast.makeText(this, "Fitur Scan Merchandise segera hadir!", Toast.LENGTH_SHORT).show()
-        }
-        itemBahasa.setOnClickListener {
-            Toast.makeText(this, "Fitur Ubah Bahasa segera hadir!", Toast.LENGTH_SHORT).show()
-        }
-
-        // --- PESAN ---
+        // --- PESANAN: Riwayat Pesanan ---
         btnHistoryOrder.setOnClickListener {
             startActivity(Intent(this, HistoryActivity::class.java))
         }
-        itemMetodePembayaran.setOnClickListener {
-            Toast.makeText(this, "Fitur Metode Pembayaran segera hadir!", Toast.LENGTH_SHORT).show()
-        }
-        itemBulkOrder.setOnClickListener {
-            Toast.makeText(this, "Fitur Pesanan Jumlah Besar segera hadir!", Toast.LENGTH_SHORT).show()
+
+        // --- PREFERENSI ---
+        switchNotifikasi.setOnCheckedChangeListener { _, isChecked ->
+            val msg = if (isChecked) "Notifikasi diaktifkan" else "Notifikasi dimatikan"
+            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
         }
 
-        // --- MATCHA LIFESTYLE ---
-        itemBantuan.setOnClickListener {
-            startActivity(Intent(this, WebViewActivity::class.java).apply {
-                putExtra("TITLE", "Bantuan")
-                putExtra("URL", "https://matchone.com/help")
-            })
-        }
+        // --- INFORMASI ---
         itemKebijakanPrivasi.setOnClickListener {
-            startActivity(Intent(this, WebViewActivity::class.java).apply {
+            val intent = Intent(this, WebViewActivity::class.java).apply {
                 putExtra("TITLE", "Kebijakan Privasi")
-                putExtra("URL", "https://matchone.com/privacy")
-            })
+                putExtra("URL", "privacy")
+            }
+            startActivity(intent)
         }
-        itemKetentuan.setOnClickListener {
-            startActivity(Intent(this, WebViewActivity::class.java).apply {
-                putExtra("TITLE", "Ketentuan Layanan")
-                putExtra("URL", "https://matchone.com/terms")
-            })
-        }
-        itemLaporMasalah.setOnClickListener {
-            val nomorWA = "6281234567890"
-            startActivity(Intent(Intent.ACTION_VIEW,
-                android.net.Uri.parse("https://wa.me/$nomorWA?text=Halo%20MatchOne%2C%20saya%20ingin%20melaporkan%20masalah!")))
-        }
-        itemWhatsapp.setOnClickListener {
-            val nomorWA = "6281234567890"
-            startActivity(Intent(Intent.ACTION_VIEW,
-                android.net.Uri.parse("https://wa.me/$nomorWA?text=Halo%20MatchOne%2C%20saya%20butuh%20bantuan!")))
-        }
-        itemTentang.setOnClickListener {
-            startActivity(Intent(this, WebViewActivity::class.java).apply {
-                putExtra("TITLE", "Tentang Matcha Lifestyle")
-                putExtra("URL", "https://matchone.com/about")
-            })
+
+        itemBantuan.setOnClickListener {
+            val intent = Intent(this, WebViewActivity::class.java).apply {
+                putExtra("TITLE", "Pusat Bantuan")
+                putExtra("URL", "help")
+            }
+            startActivity(intent)
         }
 
         // --- LOGOUT ---
-        btnLogout.setOnClickListener { logout() }
+        btnLogout.setOnClickListener {
+            AlertDialog.Builder(this)
+                .setTitle("Keluar Akun")
+                .setMessage("Apakah kamu yakin ingin keluar?")
+                .setPositiveButton("Ya, Keluar") { _, _ -> logout() }
+                .setNegativeButton("Batal", null)
+                .show()
+        }
 
         // --- BOTTOM NAV ---
         setupBottomNav()
     }
 
-    private fun loadUserProfile(
-        tvName: TextView,
-        tvEmail: TextView,
-        tvLevel: TextView,
-        tvPoints: TextView,
-        tvNextLevel: TextView,
-        progressPoints: ProgressBar
-    ) {
+    private fun loadUserProfile(tvName: TextView, tvEmail: TextView) {
         val token = "Bearer ${sessionManager.fetchAuthToken()}"
         ApiClient.instance.getUserProfile(token).enqueue(object : Callback<UserModel> {
             override fun onResponse(call: Call<UserModel>, response: Response<UserModel>) {
                 if (response.isSuccessful && response.body() != null) {
                     val user = response.body()!!
-
                     tvName.text  = user.name
                     tvEmail.text = user.email
-                    tvPoints.text = "${user.points} poin"
-
-                    // Tentukan level & progress
-                    val levelName: String
-                    val nextLevelPoints: Int
-                    val maxPoints: Int
-
-                    when {
-                        user.points >= 1000 -> {
-                            levelName = "Ceremonial"
-                            nextLevelPoints = 0
-                            maxPoints = 1000
-                        }
-                        user.points >= 500 -> {
-                            levelName = "Premium"
-                            nextLevelPoints = 1000 - user.points
-                            maxPoints = 500
-                        }
-                        user.points >= 100 -> {
-                            levelName = "Culinary"
-                            nextLevelPoints = 500 - user.points
-                            maxPoints = 400
-                        }
-                        else -> {
-                            levelName = "Starter"
-                            nextLevelPoints = 100 - user.points
-                            maxPoints = 100
-                        }
-                    }
-
-                    tvLevel.text = levelName
-
-                    if (nextLevelPoints > 0) {
-                        val nextName = when {
-                            user.points >= 500 -> "Ceremonial"
-                            user.points >= 100 -> "Premium"
-                            else               -> "Culinary"
-                        }
-                        tvNextLevel.text = "$nextLevelPoints poin → $nextName"
-                        progressPoints.max = maxPoints
-                        progressPoints.progress = user.points % maxPoints
-                    } else {
-                        tvNextLevel.text = "Level Tertinggi 🎉"
-                        progressPoints.progress = 100
-                    }
                 }
             }
-            override fun onFailure(call: Call<UserModel>, t: Throwable) {
-                // Biarkan default jika gagal
-            }
+            override fun onFailure(call: Call<UserModel>, t: Throwable) { }
         })
-    }
-
-    private fun showEditProfilDialog(tvName: TextView) {
-        val dialogView = layoutInflater.inflate(android.R.layout.simple_list_item_1, null)
-
-        // Buat dialog sederhana dengan 2 input
-        val layout = android.widget.LinearLayout(this).apply {
-            orientation = android.widget.LinearLayout.VERTICAL
-            setPadding(48, 32, 48, 16)
-        }
-
-        val etName = EditText(this).apply {
-            hint = "Nama Lengkap"
-            setText(tvName.text)
-        }
-        val etPhone = EditText(this).apply {
-            hint = "Nomor Telepon"
-            inputType = android.text.InputType.TYPE_CLASS_PHONE
-        }
-
-        layout.addView(etName)
-        layout.addView(etPhone)
-
-        AlertDialog.Builder(this)
-            .setTitle("Edit Profil")
-            .setView(layout)
-            .setPositiveButton("Simpan") { _, _ ->
-                val newName  = etName.text.toString().trim()
-                val newPhone = etPhone.text.toString().trim()
-
-                if (newName.isEmpty()) {
-                    Toast.makeText(this, "Nama tidak boleh kosong!", Toast.LENGTH_SHORT).show()
-                    return@setPositiveButton
-                }
-
-                val token = "Bearer ${sessionManager.fetchAuthToken()}"
-                ApiClient.instance.updateProfile(token, newName, newPhone)
-                    .enqueue(object : Callback<UserModel> {
-                        override fun onResponse(call: Call<UserModel>, response: Response<UserModel>) {
-                            if (response.isSuccessful && response.body() != null) {
-                                tvName.text = response.body()!!.name
-                                Toast.makeText(this@ProfileActivity,
-                                    "Profil berhasil diperbarui!", Toast.LENGTH_SHORT).show()
-                            } else {
-                                Toast.makeText(this@ProfileActivity,
-                                    "Gagal update profil", Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                        override fun onFailure(call: Call<UserModel>, t: Throwable) {
-                            Toast.makeText(this@ProfileActivity,
-                                "Koneksi bermasalah: ${t.message}", Toast.LENGTH_SHORT).show()
-                        }
-                    })
-            }
-            .setNegativeButton("Batal", null)
-            .show()
     }
 
     private fun logout() {
@@ -296,7 +131,7 @@ class ProfileActivity : AppCompatActivity() {
                 .setTextColor(android.graphics.Color.parseColor("#2D5A27"))
             findViewById<TextView>(R.id.textProfile)
                 .setTextColor(android.graphics.Color.parseColor("#2D5A27"))
-        } catch (e: Exception) { }
+        } catch (e: Exception) { /* ignore */ }
 
         findViewById<LinearLayout>(R.id.navHome)?.setOnClickListener {
             startActivity(Intent(this, HomeActivity::class.java))
