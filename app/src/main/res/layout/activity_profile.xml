@@ -6,72 +6,57 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F5F5F0"
-    android:fitsSystemWindows="true"
     tools:context=".ui.profile.ProfileActivity">
 
     <!-- ========================= -->
     <!-- HEADER                    -->
     <!-- ========================= -->
     <LinearLayout
-        android:id="@+id/headerProfile"
+        android:id="@+id/headerLayout"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:paddingHorizontal="16dp"
-        android:background="#37563b"
+        android:paddingTop="20dp"
+        android:paddingBottom="16dp"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
-            android:id="@+id/btnBackProfile"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_back"
-            app:tint="#FFFFFF" />
+            android:id="@+id/btnBack"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="@android:color/transparent"
+            android:src="@android:drawable/ic_media_previous"
+            app:tint="#1A1A1A" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center"
-            android:text="Profil Saya"
-            android:textColor="#FFFFFF"
-            android:textSize="17sp"
+            android:layout_marginStart="8dp"
+            android:text="Pengaturan Akun"
+            android:textColor="#1A1A1A"
+            android:textSize="18sp"
             android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tvEditProfil"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Edit"
-            android:textColor="#A8D5A2"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:drawableEnd="@android:drawable/ic_menu_edit"
-            android:drawablePadding="4dp"
-            android:drawableTint="#A8D5A2" />
-
     </LinearLayout>
 
     <!-- ========================= -->
-    <!-- MAIN SCROLL CONTENT       -->
+    <!-- SCROLLABLE CONTENT        -->
     <!-- ========================= -->
     <androidx.core.widget.NestedScrollView
-        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:clipToPadding="false"
         android:paddingBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavContainer"
-        app:layout_constraintTop_toBottomOf="@id/headerProfile">
+        app:layout_constraintTop_toBottomOf="@id/headerLayout"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavContainer">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingHorizontal="16dp"
-            android:paddingTop="12dp"
             android:paddingBottom="24dp">
 
             <!-- ========================= -->
@@ -80,270 +65,195 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
                 app:cardBackgroundColor="#FFFFFF"
-                app:cardCornerRadius="16dp"
+                app:cardCornerRadius="14dp"
                 app:cardElevation="0dp"
-                app:strokeColor="#E8E8E8"
+                app:strokeColor="#EBEBEB"
                 app:strokeWidth="1dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
                     android:padding="16dp">
 
-                    <!-- Row: Avatar + Name + Level -->
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/ivAvatar"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:scaleType="centerCrop"
+                        android:src="@android:drawable/ic_menu_myplaces"
+                        app:shapeAppearanceOverlay="@style/CircleImageView" />
+
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <com.google.android.material.imageview.ShapeableImageView
-                            android:id="@+id/ivAvatar"
-                            android:layout_width="64dp"
-                            android:layout_height="64dp"
-                            android:scaleType="centerCrop"
-                            android:src="@android:drawable/ic_menu_myplaces"
-                            app:shapeAppearanceOverlay="@style/CircleImageView" />
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="14dp"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Hai,"
-                                android:textColor="#888888"
-                                android:textSize="13sp" />
-
-                            <TextView
-                                android:id="@+id/tvProfileName"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:ellipsize="end"
-                                android:maxLines="1"
-                                android:text="Nama Pengguna"
-                                android:textColor="#1A1A1A"
-                                android:textSize="18sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:id="@+id/tvProfileEmail"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="email@example.com"
-                                android:textColor="#888888"
-                                android:textSize="12sp"
-                                android:layout_marginTop="2dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="12dp"
-                            android:orientation="vertical"
-                            android:gravity="center">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Level"
-                                android:textColor="#888888"
-                                android:textSize="11sp" />
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="🍵"
-                                    android:textSize="14sp" />
-
-                                <TextView
-                                    android:id="@+id/tvLevel"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="4dp"
-                                    android:text="Starter"
-                                    android:textColor="#37563b"
-                                    android:textSize="13sp"
-                                    android:textStyle="bold" />
-                            </LinearLayout>
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <!-- Divider -->
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginVertical="12dp"
-                        android:background="#F0F0F0" />
-
-                    <!-- Row: Poin -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:layout_marginStart="14dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/tvProfileName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="⭐"
-                            android:textSize="18sp" />
+                            android:text="Nama Pengguna"
+                            android:textColor="#1A1A1A"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            tools:text="Budi Santoso" />
 
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Poin Kamu"
-                                android:textColor="#888888"
-                                android:textSize="12sp" />
-
-                            <TextView
-                                android:id="@+id/tvPoints"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="0 poin"
-                                android:textColor="#37563b"
-                                android:textSize="16sp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-
-                        <!-- Progress ke level berikutnya -->
-                        <LinearLayout
+                        <TextView
+                            android:id="@+id/tvProfileEmail"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:gravity="end">
-
-                            <TextView
-                                android:id="@+id/tvNextLevel"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="100 poin → Culinary"
-                                android:textColor="#AAAAAA"
-                                android:textSize="11sp" />
-                        </LinearLayout>
+                            android:layout_marginTop="2dp"
+                            android:text="email@contoh.com"
+                            android:textColor="#888888"
+                            android:textSize="13sp"
+                            tools:text="budi.santoso@email.com" />
                     </LinearLayout>
-
-                    <!-- Progress bar poin -->
-                    <ProgressBar
-                        android:id="@+id/progressPoints"
-                        style="?android:attr/progressBarStyleHorizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="8dp"
-                        android:layout_marginTop="8dp"
-                        android:max="100"
-                        android:progress="0"
-                        android:progressTint="#37563b"
-                        android:progressBackgroundTint="#E0E0E0" />
-
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <!-- ========================= -->
-            <!-- CARD: PROMO MEMBER        -->
+            <!-- LABEL: KEAMANAN          -->
             <!-- ========================= -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="KEAMANAN"
+                android:textColor="#888888"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.1" />
+
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
+                android:layout_marginBottom="24dp"
                 app:cardBackgroundColor="#FFFFFF"
-                app:cardCornerRadius="16dp"
+                app:cardCornerRadius="14dp"
                 app:cardElevation="0dp"
-                app:strokeColor="#E8E8E8"
+                app:strokeColor="#EBEBEB"
                 app:strokeWidth="1dp">
 
+                <!-- Ubah Kata Sandi -->
                 <LinearLayout
+                    android:id="@+id/itemUbahPassword"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="✦"
-                            android:textColor="#37563b"
-                            android:textSize="14sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="6dp"
-                            android:text="Promo Spesial Buat Member!"
-                            android:textColor="#1A1A1A"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
+                    android:layout_height="56dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="16dp">
 
                     <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:text="Gabung sekarang dan jangan lewatkan penawaran menarik setiap saat."
-                        android:textColor="#888888"
-                        android:textSize="13sp" />
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:gravity="center"
+                        android:text="🔒"
+                        android:textSize="18sp" />
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnGabungWhatsapp"
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:layout_marginTop="14dp"
-                        android:text="  Gabung Sekarang"
-                        android:textAllCaps="false"
-                        android:textColor="#FFFFFF"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        app:backgroundTint="#37563b"
-                        app:cornerRadius="10dp"
-                        app:icon="@android:drawable/ic_dialog_dialer"
-                        app:iconTint="#FFFFFF" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:layout_weight="1"
+                        android:text="Ubah Kata Sandi"
+                        android:textColor="#1A1A1A"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="›"
+                        android:textColor="#CCCCCC"
+                        android:textSize="22sp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <!-- ========================= -->
-            <!-- SECTION: AKUN             -->
+            <!-- LABEL: PESANAN           -->
             <!-- ========================= -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="10dp"
-                android:text="Akun"
-                android:textColor="#1A1A1A"
-                android:textSize="17sp"
-                android:textStyle="bold" />
+                android:layout_marginBottom="8dp"
+                android:text="PESANAN"
+                android:textColor="#888888"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.1" />
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
                 app:cardBackgroundColor="#FFFFFF"
-                app:cardCornerRadius="16dp"
+                app:cardCornerRadius="14dp"
                 app:cardElevation="0dp"
-                app:strokeColor="#E8E8E8"
+                app:strokeColor="#EBEBEB"
+                app:strokeWidth="1dp">
+
+                <!-- Riwayat Pesanan -->
+                <LinearLayout
+                    android:id="@+id/btnHistoryOrder"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="16dp">
+
+                    <TextView
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:gravity="center"
+                        android:text="🧾"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:layout_weight="1"
+                        android:text="Riwayat Pesanan"
+                        android:textColor="#1A1A1A"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="›"
+                        android:textColor="#CCCCCC"
+                        android:textSize="22sp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ========================= -->
+            <!-- LABEL: PREFERENSI        -->
+            <!-- ========================= -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="PREFERENSI"
+                android:textColor="#888888"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.1" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#EBEBEB"
                 app:strokeWidth="1dp">
 
                 <LinearLayout
@@ -351,107 +261,65 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
+                    <!-- Notifikasi dengan Toggle -->
                     <LinearLayout
-                        android:id="@+id/itemKotakMasuk"
-                        android:layout_width="match_parent"
-                        android:layout_height="56dp"
-                        android:background="?attr/selectableItemBackground"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingHorizontal="16dp">
-                        <TextView android:layout_width="28dp" android:layout_height="28dp" android:gravity="center" android:text="📥" android:textSize="18sp" />
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="12dp" android:layout_weight="1" android:text="Kotak Masuk" android:textColor="#1A1A1A" android:textSize="15sp" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="›" android:textColor="#CCCCCC" android:textSize="22sp" />
-                    </LinearLayout>
-
-                    <View android:layout_width="match_parent" android:layout_height="0.5dp" android:layout_marginHorizontal="16dp" android:background="#F0F0F0" />
-
-                    <LinearLayout
-                        android:id="@+id/itemAlamat"
-                        android:layout_width="match_parent"
-                        android:layout_height="56dp"
-                        android:background="?attr/selectableItemBackground"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingHorizontal="16dp">
-                        <TextView android:layout_width="28dp" android:layout_height="28dp" android:gravity="center" android:text="📍" android:textSize="18sp" />
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="12dp" android:layout_weight="1" android:text="Alamat Pengiriman" android:textColor="#1A1A1A" android:textSize="15sp" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="›" android:textColor="#CCCCCC" android:textSize="22sp" />
-                    </LinearLayout>
-
-                    <View android:layout_width="match_parent" android:layout_height="0.5dp" android:layout_marginHorizontal="16dp" android:background="#F0F0F0" />
-
-                    <LinearLayout
-                        android:id="@+id/itemScan"
-                        android:layout_width="match_parent"
-                        android:layout_height="56dp"
-                        android:background="?attr/selectableItemBackground"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingHorizontal="16dp">
-                        <TextView android:layout_width="28dp" android:layout_height="28dp" android:gravity="center" android:text="🔳" android:textSize="18sp" />
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="12dp" android:layout_weight="1" android:text="Scan Merchandise" android:textColor="#1A1A1A" android:textSize="15sp" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="›" android:textColor="#CCCCCC" android:textSize="22sp" />
-                    </LinearLayout>
-
-                    <View android:layout_width="match_parent" android:layout_height="0.5dp" android:layout_marginHorizontal="16dp" android:background="#F0F0F0" />
-
-                    <LinearLayout
-                        android:id="@+id/itemBiometric"
+                        android:id="@+id/itemNotifikasi"
                         android:layout_width="match_parent"
                         android:layout_height="56dp"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
                         android:paddingHorizontal="16dp">
-                        <TextView android:layout_width="28dp" android:layout_height="28dp" android:gravity="center" android:text="👆" android:textSize="18sp" />
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="12dp" android:layout_weight="1" android:text="Aktifkan Biometric ID" android:textColor="#1A1A1A" android:textSize="15sp" />
+
+                        <TextView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:gravity="center"
+                            android:text="🔔"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_weight="1"
+                            android:text="Notifikasi"
+                            android:textColor="#1A1A1A"
+                            android:textSize="15sp" />
+
                         <Switch
-                            android:id="@+id/switchBiometric"
+                            android:id="@+id/switchNotifikasi"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:checked="false"
+                            android:checked="true"
                             android:thumbTint="#FFFFFF"
-                            android:trackTint="#CCCCCC" />
-                    </LinearLayout>
-
-                    <View android:layout_width="match_parent" android:layout_height="0.5dp" android:layout_marginHorizontal="16dp" android:background="#F0F0F0" />
-
-                    <LinearLayout
-                        android:id="@+id/itemBahasa"
-                        android:layout_width="match_parent"
-                        android:layout_height="56dp"
-                        android:background="?attr/selectableItemBackground"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingHorizontal="16dp">
-                        <TextView android:layout_width="28dp" android:layout_height="28dp" android:gravity="center" android:text="🌐" android:textSize="18sp" />
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="12dp" android:layout_weight="1" android:text="Ubah Bahasa Aplikasi" android:textColor="#1A1A1A" android:textSize="15sp" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="›" android:textColor="#CCCCCC" android:textSize="22sp" />
+                            android:trackTint="@null"
+                            app:trackTint="#2D5A27" />
                     </LinearLayout>
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <!-- ========================= -->
-            <!-- SECTION: PESAN            -->
+            <!-- LABEL: INFORMASI         -->
             <!-- ========================= -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="10dp"
-                android:text="Pesan"
-                android:textColor="#1A1A1A"
-                android:textSize="17sp"
-                android:textStyle="bold" />
+                android:layout_marginBottom="8dp"
+                android:text="INFORMASI"
+                android:textColor="#888888"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.1" />
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="32dp"
                 app:cardBackgroundColor="#FFFFFF"
-                app:cardCornerRadius="16dp"
+                app:cardCornerRadius="14dp"
                 app:cardElevation="0dp"
-                app:strokeColor="#E8E8E8"
+                app:strokeColor="#EBEBEB"
                 app:strokeWidth="1dp">
 
                 <LinearLayout
@@ -459,162 +327,119 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
+                    <!-- Kebijakan Privasi -->
                     <LinearLayout
-                        android:id="@+id/btnHistoryOrder"
+                        android:id="@+id/itemKebijakanPrivasi"
                         android:layout_width="match_parent"
                         android:layout_height="56dp"
                         android:background="?attr/selectableItemBackground"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
                         android:paddingHorizontal="16dp">
-                        <TextView android:layout_width="28dp" android:layout_height="28dp" android:gravity="center" android:text="🧾" android:textSize="18sp" />
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="12dp" android:layout_weight="1" android:text="Riwayat Pesanan" android:textColor="#1A1A1A" android:textSize="15sp" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="›" android:textColor="#CCCCCC" android:textSize="22sp" />
+
+                        <TextView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:gravity="center"
+                            android:text="🛡️"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_weight="1"
+                            android:text="Kebijakan Privasi"
+                            android:textColor="#1A1A1A"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="⬀"
+                            android:textColor="#CCCCCC"
+                            android:textSize="18sp" />
                     </LinearLayout>
 
-                    <View android:layout_width="match_parent" android:layout_height="0.5dp" android:layout_marginHorizontal="16dp" android:background="#F0F0F0" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_marginHorizontal="16dp"
+                        android:background="#F0F0F0" />
 
+                    <!-- Pusat Bantuan -->
                     <LinearLayout
-                        android:id="@+id/itemMetodePembayaran"
+                        android:id="@+id/itemBantuan"
                         android:layout_width="match_parent"
                         android:layout_height="56dp"
                         android:background="?attr/selectableItemBackground"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
                         android:paddingHorizontal="16dp">
-                        <TextView android:layout_width="28dp" android:layout_height="28dp" android:gravity="center" android:text="💳" android:textSize="18sp" />
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="12dp" android:layout_weight="1" android:text="Metode Pembayaran" android:textColor="#1A1A1A" android:textSize="15sp" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="›" android:textColor="#CCCCCC" android:textSize="22sp" />
-                    </LinearLayout>
 
-                    <View android:layout_width="match_parent" android:layout_height="0.5dp" android:layout_marginHorizontal="16dp" android:background="#F0F0F0" />
+                        <TextView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:gravity="center"
+                            android:text="❓"
+                            android:textSize="18sp" />
 
-                    <LinearLayout
-                        android:id="@+id/itemBulkOrder"
-                        android:layout_width="match_parent"
-                        android:layout_height="56dp"
-                        android:background="?attr/selectableItemBackground"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingHorizontal="16dp">
-                        <TextView android:layout_width="28dp" android:layout_height="28dp" android:gravity="center" android:text="📦" android:textSize="18sp" />
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="12dp" android:layout_weight="1" android:text="Pesanan Jumlah Besar" android:textColor="#1A1A1A" android:textSize="15sp" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginEnd="8dp" android:background="@drawable/bg_discount_icon" android:paddingHorizontal="8dp" android:paddingVertical="3dp" android:text="Baru" android:textColor="#FFFFFF" android:textSize="11sp" android:textStyle="bold" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="›" android:textColor="#CCCCCC" android:textSize="22sp" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_weight="1"
+                            android:text="Pusat Bantuan"
+                            android:textColor="#1A1A1A"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="›"
+                            android:textColor="#CCCCCC"
+                            android:textSize="22sp" />
                     </LinearLayout>
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <!-- ========================= -->
-            <!-- SECTION: MATCHA LIFESTYLE -->
+            <!-- TOMBOL HAPUS AKUN         -->
             <!-- ========================= -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="10dp"
-                android:text="Matcha Lifestyle"
-                android:textColor="#1A1A1A"
-                android:textSize="17sp"
-                android:textStyle="bold" />
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardBackgroundColor="#FFFFFF"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                app:strokeColor="#E8E8E8"
-                app:strokeWidth="1dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <LinearLayout android:id="@+id/itemBantuan" android:layout_width="match_parent" android:layout_height="56dp" android:background="?attr/selectableItemBackground" android:gravity="center_vertical" android:orientation="horizontal" android:paddingHorizontal="16dp">
-                        <TextView android:layout_width="28dp" android:layout_height="28dp" android:gravity="center" android:text="❓" android:textSize="18sp" />
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="12dp" android:layout_weight="1" android:text="Bantuan" android:textColor="#1A1A1A" android:textSize="15sp" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="›" android:textColor="#CCCCCC" android:textSize="22sp" />
-                    </LinearLayout>
-
-                    <View android:layout_width="match_parent" android:layout_height="0.5dp" android:layout_marginHorizontal="16dp" android:background="#F0F0F0" />
-
-                    <LinearLayout android:id="@+id/itemKebijakanPrivasi" android:layout_width="match_parent" android:layout_height="56dp" android:background="?attr/selectableItemBackground" android:gravity="center_vertical" android:orientation="horizontal" android:paddingHorizontal="16dp">
-                        <TextView android:layout_width="28dp" android:layout_height="28dp" android:gravity="center" android:text="📖" android:textSize="18sp" />
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="12dp" android:layout_weight="1" android:text="Kebijakan Privasi" android:textColor="#1A1A1A" android:textSize="15sp" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="›" android:textColor="#CCCCCC" android:textSize="22sp" />
-                    </LinearLayout>
-
-                    <View android:layout_width="match_parent" android:layout_height="0.5dp" android:layout_marginHorizontal="16dp" android:background="#F0F0F0" />
-
-                    <LinearLayout android:id="@+id/itemKetentuan" android:layout_width="match_parent" android:layout_height="56dp" android:background="?attr/selectableItemBackground" android:gravity="center_vertical" android:orientation="horizontal" android:paddingHorizontal="16dp">
-                        <TextView android:layout_width="28dp" android:layout_height="28dp" android:gravity="center" android:text="ℹ️" android:textSize="18sp" />
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="12dp" android:layout_weight="1" android:text="Ketentuan Layanan" android:textColor="#1A1A1A" android:textSize="15sp" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="›" android:textColor="#CCCCCC" android:textSize="22sp" />
-                    </LinearLayout>
-
-                    <View android:layout_width="match_parent" android:layout_height="0.5dp" android:layout_marginHorizontal="16dp" android:background="#F0F0F0" />
-
-                    <LinearLayout android:id="@+id/itemLaporMasalah" android:layout_width="match_parent" android:layout_height="56dp" android:background="?attr/selectableItemBackground" android:gravity="center_vertical" android:orientation="horizontal" android:paddingHorizontal="16dp">
-                        <TextView android:layout_width="28dp" android:layout_height="28dp" android:gravity="center" android:text="✉️" android:textSize="18sp" />
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="12dp" android:layout_weight="1" android:text="Lapor Masalah" android:textColor="#1A1A1A" android:textSize="15sp" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="›" android:textColor="#CCCCCC" android:textSize="22sp" />
-                    </LinearLayout>
-
-                    <View android:layout_width="match_parent" android:layout_height="0.5dp" android:layout_marginHorizontal="16dp" android:background="#F0F0F0" />
-
-                    <LinearLayout android:id="@+id/itemWhatsapp" android:layout_width="match_parent" android:layout_height="56dp" android:background="?attr/selectableItemBackground" android:gravity="center_vertical" android:orientation="horizontal" android:paddingHorizontal="16dp">
-                        <TextView android:layout_width="28dp" android:layout_height="28dp" android:gravity="center" android:text="💬" android:textSize="18sp" />
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="12dp" android:layout_weight="1" android:text="Layanan WhatsApp" android:textColor="#1A1A1A" android:textSize="15sp" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="›" android:textColor="#CCCCCC" android:textSize="22sp" />
-                    </LinearLayout>
-
-                    <View android:layout_width="match_parent" android:layout_height="0.5dp" android:layout_marginHorizontal="16dp" android:background="#F0F0F0" />
-
-                    <LinearLayout android:id="@+id/itemTentang" android:layout_width="match_parent" android:layout_height="56dp" android:background="?attr/selectableItemBackground" android:gravity="center_vertical" android:orientation="horizontal" android:paddingHorizontal="16dp">
-                        <TextView android:layout_width="28dp" android:layout_height="28dp" android:gravity="center" android:text="🤍" android:textSize="18sp" />
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="12dp" android:layout_weight="1" android:text="Tentang Matcha Lifestyle" android:textColor="#1A1A1A" android:textSize="15sp" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="›" android:textColor="#CCCCCC" android:textSize="22sp" />
-                    </LinearLayout>
-
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- LOGOUT -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnLogout"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="20dp"
-                android:text="Keluar Akun"
+                android:layout_height="52dp"
+                android:text="Keluar"
                 android:textColor="#CC0000"
-                android:textSize="14sp"
+                android:textSize="15sp"
                 android:textStyle="bold"
-                app:cornerRadius="12dp"
+                app:cornerRadius="26dp"
                 app:strokeColor="#FFCCCC"
-                app:strokeWidth="1dp" />
+                app:strokeWidth="1.5dp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:gravity="center"
-                android:text="Versi Aplikasi 1.0.0"
+                android:text="Menghapus akun akan menghilangkan\nsemua data permanen."
                 android:textColor="#AAAAAA"
                 android:textSize="12sp" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- BOTTOM NAVIGATION -->
+    <!-- ========================= -->
+    <!-- BOTTOM NAVIGATION         -->
+    <!-- ========================= -->
     <include
         android:id="@+id/bottomNavContainer"
         layout="@layout/bottom_nav"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="76dp"
         app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -36,21 +36,19 @@ class CartActivity : AppCompatActivity(), CartAdapter.OnCartListener {
 
     private var cartItems: List<CartItem> = emptyList()
     private var isUpdatingCart = false
-    private var totalAmount = 0.0
-    private var selectedPaymentMethod = "manual_transfer"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cart)
 
         sessionManager = SessionManager(this)
+
         val token = sessionManager.fetchAuthToken() ?: ""
         cartRepository = CartRepository(token)
 
         initViews()
         setupRecyclerView()
         setupClickListeners()
-        setupBottomNavigation()
         loadCart()
     }
 
@@ -77,10 +75,21 @@ class CartActivity : AppCompatActivity(), CartAdapter.OnCartListener {
     }
 
     private fun setupClickListeners() {
-        btnBack.setOnClickListener { finish() }
-        btnTambahPesanan.setOnClickListener { finish() }
-        btnClear.setOnClickListener { clearAllCart() }
-        btnCheckout.setOnClickListener { processCheckout() }
+        btnBack.setOnClickListener {
+            finish()
+        }
+
+        btnTambahPesanan.setOnClickListener {
+            finish()
+        }
+
+        btnClear.setOnClickListener {
+            clearAllCart()
+        }
+
+        btnCheckout.setOnClickListener {
+            processCheckout()
+        }
     }
 
     private fun loadCart() {
@@ -90,6 +99,7 @@ class CartActivity : AppCompatActivity(), CartAdapter.OnCartListener {
             onSuccess = { items ->
                 cartItems = items
                 cartAdapter.updateData(items)
+
                 btnCheckout.isEnabled = items.isNotEmpty()
                 updateTotal(items)
             },
@@ -101,10 +111,13 @@ class CartActivity : AppCompatActivity(), CartAdapter.OnCartListener {
     }
 
     private fun updateTotal(items: List<CartItem>) {
-        totalAmount = items.sumOf { it.subtotal.toDouble() }
+        val total = items.sumOf {
+            it.subtotal.toDouble()
+        }
 
-        val formatter = NumberFormat.getCurrencyInstance(Locale("in", "ID"))
-        val formatted = formatter.format(totalAmount).replace("Rp", "Rp ")
+        val localeID = Locale("in", "ID")
+        val fmt = NumberFormat.getCurrencyInstance(localeID)
+        val formatted = fmt.format(total).replace("Rp", "Rp ")
 
         tvTotalPrice.text = formatted
         tvTotalPriceBottom.text = formatted
@@ -138,7 +151,9 @@ class CartActivity : AppCompatActivity(), CartAdapter.OnCartListener {
     override fun onDeleteItem(id: Int) {
         cartRepository.deleteItem(
             cartId = id,
-            onSuccess = { loadCart() },
+            onSuccess = {
+                loadCart()
+            },
             onError = { msg ->
                 Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
             }
@@ -152,7 +167,12 @@ class CartActivity : AppCompatActivity(), CartAdapter.OnCartListener {
                 cartAdapter.updateData(emptyList())
                 updateTotal(emptyList())
                 btnCheckout.isEnabled = false
-                Toast.makeText(this, "Keranjang dikosongkan", Toast.LENGTH_SHORT).show()
+
+                Toast.makeText(
+                    this,
+                    "Keranjang dikosongkan",
+                    Toast.LENGTH_SHORT
+                ).show()
             },
             onError = { msg ->
                 Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
@@ -162,125 +182,101 @@ class CartActivity : AppCompatActivity(), CartAdapter.OnCartListener {
 
     private fun processCheckout() {
         if (cartItems.isEmpty()) {
-            Toast.makeText(this, "Keranjang masih kosong!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this,
+                "Keranjang masih kosong!",
+                Toast.LENGTH_SHORT
+            ).show()
             return
         }
 
-        val token = sessionManager.fetchAuthToken()
+        val authToken = sessionManager.fetchAuthToken()
 
-        if (token.isNullOrEmpty()) {
-            Toast.makeText(this, "Token tidak ditemukan, silakan login ulang", Toast.LENGTH_SHORT).show()
+        if (authToken.isNullOrEmpty()) {
+            Toast.makeText(
+                this,
+                "Token tidak ditemukan, silakan login ulang",
+                Toast.LENGTH_SHORT
+            ).show()
             return
         }
 
         btnCheckout.isEnabled = false
         btnCheckout.text = "Memproses..."
 
-        ApiClient.instance.checkoutCart(
-            token = "Bearer $token",
-            paymentMethod = selectedPaymentMethod
-        ).enqueue(object : Callback<CheckoutResponse> {
+        val token = "Bearer $authToken"
+
+        ApiClient.instance.checkoutCart(token).enqueue(object : Callback<CheckoutResponse> {
 
             override fun onResponse(
                 call: Call<CheckoutResponse>,
                 response: Response<CheckoutResponse>
             ) {
                 btnCheckout.isEnabled = true
-                btnCheckout.text = "Checkout"
+                btnCheckout.text = "Checkout →"
 
-                if (response.isSuccessful && response.body() != null) {
-                    val checkoutResponse = response.body()!!
-                    val orderId = checkoutResponse.order.id
+                if (response.isSuccessful) {
+                    val checkoutResponse = response.body()
+                    val order = checkoutResponse?.order
 
-                    if (orderId == 0) {
+                    if (order == null) {
                         Toast.makeText(
                             this@CartActivity,
-                            "Checkout berhasil, tapi order_id tidak ditemukan",
-                            Toast.LENGTH_SHORT
+                            "Data order tidak ditemukan",
+                            Toast.LENGTH_LONG
                         ).show()
                         return
                     }
 
-                    val formatter = NumberFormat.getCurrencyInstance(Locale("in", "ID"))
-
-                    val itemsSummary = cartItems.joinToString("\n") { item ->
-                        val productName = if (item.name.isNotEmpty()) {
-                            item.name
-                        } else {
-                            "Produk #${item.product_id}"
-                        }
-
-                        val subtotal = formatter.format(item.subtotal).replace("Rp", "Rp ")
-
-                        "• $productName x${item.quantity} - $subtotal"
+                    val totalAmount = cartItems.sumOf {
+                        it.subtotal.toDouble()
                     }
 
-                    val intent = Intent(this@CartActivity, PaymentActivity::class.java).apply {
-                        putExtra("EXTRA_ORDER_ID", orderId)
+                    val itemsSummary = cartItems.joinToString("\n") { item ->
+                        val productName = item.product?.name ?: "Produk"
+                        "$productName x${item.quantity}"
+                    }
+
+                    Toast.makeText(
+                        this@CartActivity,
+                        "Pesanan berhasil dibuat!",
+                        Toast.LENGTH_LONG
+                    ).show()
+
+                    val intent = Intent(
+                        this@CartActivity,
+                        PaymentActivity::class.java
+                    ).apply {
+                        putExtra("EXTRA_ORDER_ID", order.id)
                         putExtra("EXTRA_TOTAL_AMOUNT", totalAmount)
-                        putExtra("EXTRA_PAYMENT_METHOD", selectedPaymentMethod)
+                        putExtra("EXTRA_PAYMENT_METHOD", "")
                         putExtra("EXTRA_ITEMS_SUMMARY", itemsSummary)
                     }
 
                     startActivity(intent)
-                    overridePendingTransition(R.anim.fade_scale_in, R.anim.fade_scale_out)
-
+                    finish()
                 } else {
                     Toast.makeText(
                         this@CartActivity,
-                        "Checkout gagal: ${response.code()}",
-                        Toast.LENGTH_SHORT
+                        "Gagal checkout: ${response.code()}",
+                        Toast.LENGTH_LONG
                     ).show()
                 }
             }
 
-            override fun onFailure(call: Call<CheckoutResponse>, t: Throwable) {
+            override fun onFailure(
+                call: Call<CheckoutResponse>,
+                t: Throwable
+            ) {
                 btnCheckout.isEnabled = true
-                btnCheckout.text = "Checkout"
+                btnCheckout.text = "Checkout →"
 
                 Toast.makeText(
                     this@CartActivity,
-                    "Gagal checkout: ${t.message}",
-                    Toast.LENGTH_SHORT
+                    "Koneksi bermasalah: ${t.message}",
+                    Toast.LENGTH_LONG
                 ).show()
             }
         })
-    }
-
-    private fun setupBottomNavigation() {
-        val navHome = findViewById<android.widget.LinearLayout>(R.id.navHome)
-        val navCatalog = findViewById<android.widget.LinearLayout>(R.id.navCatalog)
-        val navCart = findViewById<android.widget.LinearLayout>(R.id.navCart)
-        val navProfile = findViewById<android.widget.LinearLayout>(R.id.navProfile)
-
-        findViewById<android.widget.ImageView>(R.id.iconCart)
-            .setColorFilter(android.graphics.Color.parseColor("#37563b"))
-
-        findViewById<TextView>(R.id.textCart)
-            .setTextColor(android.graphics.Color.parseColor("#37563b"))
-
-        navHome.setOnClickListener {
-            startActivity(Intent(this, com.project.matchone.ui.main.HomeActivity::class.java))
-            finish()
-        }
-
-        navCatalog.setOnClickListener {
-            startActivity(Intent(this, com.project.matchone.ui.main.CatalogActivity::class.java))
-            finish()
-        }
-
-        navCart.setOnClickListener {
-            // Sudah di halaman Cart
-        }
-
-        navProfile.setOnClickListener {
-            startActivity(Intent(this, com.project.matchone.ui.profile.ProfileActivity::class.java))
-            finish()
-        }
-    }
-
-    override fun finish() {
-        super.finish()
-        overridePendingTransition(R.anim.close_enter, R.anim.close_exit)
     }
 }

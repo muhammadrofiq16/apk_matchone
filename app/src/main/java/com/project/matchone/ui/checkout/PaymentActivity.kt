@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.button.MaterialButton
 import com.project.matchone.R
 import com.project.matchone.data.network.ApiClient
+import com.project.matchone.ui.main.HomeActivity
 import com.project.matchone.utils.SessionManager
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -68,7 +69,9 @@ class PaymentActivity : AppCompatActivity() {
     private var selectedPaymentMethod = ""
     private var selectedSubMethod = ""
     private var selectedImageUri: Uri? = null
+
     private var orderId = 0
+    private var transactionId = 0
     private var totalAmount = 0.0
     private var itemsSummary = "-"
 
@@ -89,13 +92,19 @@ class PaymentActivity : AppCompatActivity() {
         sessionManager = SessionManager(this)
 
         orderId = intent.getIntExtra("EXTRA_ORDER_ID", 0)
+        transactionId = intent.getIntExtra("EXTRA_TRANSACTION_ID", 0)
         totalAmount = intent.getDoubleExtra("EXTRA_TOTAL_AMOUNT", 0.0)
         selectedPaymentMethod = intent.getStringExtra("EXTRA_PAYMENT_METHOD") ?: ""
         itemsSummary = intent.getStringExtra("EXTRA_ITEMS_SUMMARY") ?: "-"
 
+        if (orderId == 0 && transactionId != 0) {
+            orderId = transactionId
+        }
+
         initViews()
         setupData()
         setupClickListeners()
+        applyInitialPaymentMethod()
     }
 
     private fun initViews() {
@@ -140,17 +149,41 @@ class PaymentActivity : AppCompatActivity() {
     }
 
     private fun setupClickListeners() {
-        btnBack.setOnClickListener { finish() }
+        btnBack.setOnClickListener {
+            finish()
+        }
 
-        cardTransfer.setOnClickListener { selectMainMethod("transfer_bank") }
-        cardEwallet.setOnClickListener { selectMainMethod("e_wallet") }
-        cardCod.setOnClickListener { selectMainMethod("cod") }
+        cardTransfer.setOnClickListener {
+            selectMainMethod("transfer_bank")
+        }
 
-        optionBca.setOnClickListener { selectSubMethod("bca") }
-        optionMandiri.setOnClickListener { selectSubMethod("mandiri") }
-        optionGopay.setOnClickListener { selectSubMethod("gopay") }
-        optionShopeepay.setOnClickListener { selectSubMethod("shopeepay") }
-        optionDana.setOnClickListener { selectSubMethod("dana") }
+        cardEwallet.setOnClickListener {
+            selectMainMethod("e_wallet")
+        }
+
+        cardCod.setOnClickListener {
+            selectMainMethod("cod")
+        }
+
+        optionBca.setOnClickListener {
+            selectSubMethod("bca")
+        }
+
+        optionMandiri.setOnClickListener {
+            selectSubMethod("mandiri")
+        }
+
+        optionGopay.setOnClickListener {
+            selectSubMethod("gopay")
+        }
+
+        optionShopeepay.setOnClickListener {
+            selectSubMethod("shopeepay")
+        }
+
+        optionDana.setOnClickListener {
+            selectSubMethod("dana")
+        }
 
         btnSelectProof.setOnClickListener {
             imagePickerLauncher.launch("image/*")
@@ -158,6 +191,32 @@ class PaymentActivity : AppCompatActivity() {
 
         btnConfirmPayment.setOnClickListener {
             uploadPayment()
+        }
+    }
+
+    private fun applyInitialPaymentMethod() {
+        if (selectedPaymentMethod.isEmpty()) {
+            validateButton()
+            return
+        }
+
+        when (selectedPaymentMethod) {
+            "transfer_bank", "bank_transfer" -> {
+                selectMainMethod("transfer_bank")
+            }
+
+            "e_wallet" -> {
+                selectMainMethod("e_wallet")
+            }
+
+            "cod", "cash_on_delivery" -> {
+                selectMainMethod("cod")
+            }
+
+            else -> {
+                selectedPaymentMethod = ""
+                validateButton()
+            }
         }
     }
 
@@ -191,6 +250,7 @@ class PaymentActivity : AppCompatActivity() {
                 radioCod.setBackgroundResource(R.drawable.bg_radio_selected)
                 proofSection.visibility = View.GONE
                 selectedImageUri = null
+                ivProofPreview.visibility = View.GONE
             }
         }
 
@@ -207,11 +267,25 @@ class PaymentActivity : AppCompatActivity() {
         radioDana.setBackgroundResource(R.drawable.bg_radio_unselected)
 
         when (subMethod) {
-            "bca" -> radioBca.setBackgroundResource(R.drawable.bg_radio_selected)
-            "mandiri" -> radioMandiri.setBackgroundResource(R.drawable.bg_radio_selected)
-            "gopay" -> radioGopay.setBackgroundResource(R.drawable.bg_radio_selected)
-            "shopeepay" -> radioShopeepay.setBackgroundResource(R.drawable.bg_radio_selected)
-            "dana" -> radioDana.setBackgroundResource(R.drawable.bg_radio_selected)
+            "bca" -> {
+                radioBca.setBackgroundResource(R.drawable.bg_radio_selected)
+            }
+
+            "mandiri" -> {
+                radioMandiri.setBackgroundResource(R.drawable.bg_radio_selected)
+            }
+
+            "gopay" -> {
+                radioGopay.setBackgroundResource(R.drawable.bg_radio_selected)
+            }
+
+            "shopeepay" -> {
+                radioShopeepay.setBackgroundResource(R.drawable.bg_radio_selected)
+            }
+
+            "dana" -> {
+                radioDana.setBackgroundResource(R.drawable.bg_radio_selected)
+            }
         }
 
         validateButton()
@@ -264,18 +338,41 @@ class PaymentActivity : AppCompatActivity() {
         val token = sessionManager.fetchAuthToken()
 
         if (token.isNullOrEmpty()) {
-            Toast.makeText(this, "Token tidak ditemukan, silakan login ulang", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this,
+                "Token tidak ditemukan, silakan login ulang",
+                Toast.LENGTH_SHORT
+            ).show()
             return
         }
 
         if (orderId == 0) {
-            Toast.makeText(this, "Order ID tidak ditemukan", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this,
+                "Order ID tidak ditemukan",
+                Toast.LENGTH_SHORT
+            ).show()
             return
         }
 
         if (selectedPaymentMethod.isEmpty()) {
-            Toast.makeText(this, "Pilih metode pembayaran dulu", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this,
+                "Pilih metode pembayaran dulu",
+                Toast.LENGTH_SHORT
+            ).show()
             return
+        }
+
+        if (selectedPaymentMethod == "transfer_bank" || selectedPaymentMethod == "e_wallet") {
+            if (selectedSubMethod.isEmpty()) {
+                Toast.makeText(
+                    this,
+                    "Pilih detail metode pembayaran dulu",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return
+            }
         }
 
         if (selectedPaymentMethod == "cod") {
@@ -284,18 +381,30 @@ class PaymentActivity : AppCompatActivity() {
         }
 
         val imageUri = selectedImageUri
+
         if (imageUri == null) {
-            Toast.makeText(this, "Pilih bukti pembayaran dulu", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this,
+                "Pilih bukti pembayaran dulu",
+                Toast.LENGTH_SHORT
+            ).show()
             return
         }
 
         val imageFile = uriToFile(imageUri)
 
-        val orderIdBody = orderId.toString().toRequestBody("text/plain".toMediaTypeOrNull())
-        val paymentTypeBody = getPaymentTypeForBackend().toRequestBody("text/plain".toMediaTypeOrNull())
-        val amountPaidBody = totalAmount.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+        val orderIdBody = orderId.toString()
+            .toRequestBody("text/plain".toMediaTypeOrNull())
 
-        val imageRequestBody = imageFile.asRequestBody("image/*".toMediaTypeOrNull())
+        val paymentTypeBody = getPaymentTypeForBackend()
+            .toRequestBody("text/plain".toMediaTypeOrNull())
+
+        val amountPaidBody = totalAmount.toString()
+            .toRequestBody("text/plain".toMediaTypeOrNull())
+
+        val imageRequestBody = imageFile
+            .asRequestBody("image/*".toMediaTypeOrNull())
+
         val imagePart = MultipartBody.Part.createFormData(
             "payment_proof",
             imageFile.name,
@@ -313,7 +422,10 @@ class PaymentActivity : AppCompatActivity() {
             paymentProof = imagePart
         ).enqueue(object : Callback<ResponseBody> {
 
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+            override fun onResponse(
+                call: Call<ResponseBody>,
+                response: Response<ResponseBody>
+            ) {
                 btnConfirmPayment.isEnabled = true
                 btnConfirmPayment.text = "Konfirmasi Pesanan"
 
@@ -351,13 +463,27 @@ class PaymentActivity : AppCompatActivity() {
         btnConfirmPayment.isEnabled = false
         btnConfirmPayment.text = "Memproses..."
 
-        val orderIdBody = orderId.toString().toRequestBody("text/plain".toMediaTypeOrNull())
-        val paymentTypeBody = "cash_on_delivery".toRequestBody("text/plain".toMediaTypeOrNull())
-        val amountPaidBody = totalAmount.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+        val orderIdBody = orderId.toString()
+            .toRequestBody("text/plain".toMediaTypeOrNull())
+
+        val paymentTypeBody = "cash_on_delivery"
+            .toRequestBody("text/plain".toMediaTypeOrNull())
+
+        val amountPaidBody = totalAmount.toString()
+            .toRequestBody("text/plain".toMediaTypeOrNull())
 
         val emptyBytes = ByteArray(0)
-        val emptyBody = okhttp3.RequestBody.create("image/*".toMediaTypeOrNull(), emptyBytes)
-        val emptyPart = MultipartBody.Part.createFormData("payment_proof", "", emptyBody)
+
+        val emptyBody = okhttp3.RequestBody.create(
+            "image/*".toMediaTypeOrNull(),
+            emptyBytes
+        )
+
+        val emptyPart = MultipartBody.Part.createFormData(
+            "payment_proof",
+            "",
+            emptyBody
+        )
 
         ApiClient.instance.uploadPayment(
             token = "Bearer $token",
@@ -367,7 +493,10 @@ class PaymentActivity : AppCompatActivity() {
             paymentProof = emptyPart
         ).enqueue(object : Callback<ResponseBody> {
 
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+            override fun onResponse(
+                call: Call<ResponseBody>,
+                response: Response<ResponseBody>
+            ) {
                 btnConfirmPayment.isEnabled = true
                 btnConfirmPayment.text = "Konfirmasi Pesanan"
 
@@ -404,6 +533,7 @@ class PaymentActivity : AppCompatActivity() {
     private fun openNotaPage() {
         val intent = Intent(this@PaymentActivity, StrukActivity::class.java).apply {
             putExtra("ORDER_ID", orderId)
+            putExtra("TRANSACTION_ID", transactionId)
             putExtra("INVOICE_NUMBER", "INV-$orderId")
             putExtra("TOTAL_PRICE", totalAmount.toString())
             putExtra("STATUS", "Menunggu Konfirmasi")
@@ -414,6 +544,13 @@ class PaymentActivity : AppCompatActivity() {
         }
 
         startActivity(intent)
+    }
+
+    private fun backToHome() {
+        val intent = Intent(this@PaymentActivity, HomeActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        finish()
     }
 
     private fun uriToFile(uri: Uri): File {
@@ -434,9 +571,11 @@ class PaymentActivity : AppCompatActivity() {
 
         if (uri.scheme == "content") {
             val cursor = contentResolver.query(uri, null, null, null, null)
+
             cursor?.use {
                 if (it.moveToFirst()) {
                     val index = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+
                     if (index >= 0) {
                         result = it.getString(index)
                     }
