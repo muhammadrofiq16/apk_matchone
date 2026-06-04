@@ -5,8 +5,10 @@ import com.project.matchone.data.model.CartSummary
 import com.project.matchone.data.model.CategoryResponse
 import com.project.matchone.data.model.CheckoutResponse
 import com.project.matchone.data.model.LoginResponse
-import com.project.matchone.data.model.OrderResponse
+import com.project.matchone.data.model.OrderDetailResponse
+import com.project.matchone.data.model.OrderListResponse
 import com.project.matchone.data.model.ProductResponse
+import com.project.matchone.data.model.TransactionModel
 import com.project.matchone.data.model.UserModel
 import com.project.matchone.utils.CartResponse
 import okhttp3.MultipartBody
@@ -16,6 +18,8 @@ import retrofit2.Call
 import retrofit2.http.*
 
 interface ApiService {
+
+    // ========================= AUTH =========================
 
     @FormUrlEncoded
     @POST("api/auth/login")
@@ -58,8 +62,12 @@ interface ApiService {
         @Field("phone") phone: String
     ): Call<UserModel>
 
+    // ========================= KATEGORI =========================
+
     @GET("api/categories")
     fun getCategories(): Call<CategoryResponse>
+
+    // ========================= PRODUK =========================
 
     @GET("api/products")
     fun getProducts(): Call<ProductResponse>
@@ -68,6 +76,8 @@ interface ApiService {
     fun getProductsByCategory(
         @Query("category_id") categoryId: Int
     ): Call<ProductResponse>
+
+    // ========================= KERANJANG =========================
 
     @GET("api/cart")
     fun getCart(
@@ -106,29 +116,42 @@ interface ApiService {
         @Header("Authorization") token: String
     ): Call<CartSummary>
 
-    @FormUrlEncoded
+    // ========================= CHECKOUT =========================
+
     @POST("api/checkout")
     fun checkoutCart(
-        @Header("Authorization") token: String,
-        @Field("payment_method") paymentMethod: String
+        @Header("Authorization") token: String
     ): Call<CheckoutResponse>
+
+    // ========================= PAYMENT =========================
 
     @Multipart
     @POST("api/payments")
     fun uploadPayment(
         @Header("Authorization") token: String,
-
         @Part("order_id") orderId: RequestBody,
-
         @Part("payment_type") paymentType: RequestBody,
-
         @Part("amount_paid") amountPaid: RequestBody,
-
         @Part paymentProof: MultipartBody.Part
     ): Call<ResponseBody>
 
+    // ========================= RIWAYAT PESANAN / ORDERS =========================
+
     @GET("api/orders")
-    fun getOrders(
+    fun getTransactions(
         @Header("Authorization") token: String
-    ): Call<OrderResponse>
+    ): Call<OrderListResponse>
+
+    @GET("api/orders/{id}")
+    fun getTransactionDetail(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int
+    ): Call<OrderDetailResponse>
+
+    // Function cadangan kalau ada file lama yang masih memanggil TransactionModel langsung
+    @GET("api/orders/{id}")
+    fun getTransactionDetailRaw(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int
+    ): Call<TransactionModel>
 }
