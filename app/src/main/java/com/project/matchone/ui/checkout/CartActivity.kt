@@ -2,9 +2,12 @@ package com.project.matchone.ui.checkout
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
@@ -12,6 +15,9 @@ import com.project.matchone.R
 import com.project.matchone.data.model.CartItem
 import com.project.matchone.data.model.CheckoutResponse
 import com.project.matchone.data.network.ApiClient
+import com.project.matchone.ui.main.CatalogActivity
+import com.project.matchone.ui.main.HomeActivity
+import com.project.matchone.ui.profile.ProfileActivity
 import com.project.matchone.utils.CartRepository
 import com.project.matchone.utils.SessionManager
 import retrofit2.Call
@@ -49,6 +55,7 @@ class CartActivity : AppCompatActivity(), CartAdapter.OnCartListener {
         initViews()
         setupRecyclerView()
         setupClickListeners()
+        setupBottomNav()
         loadCart()
     }
 
@@ -75,21 +82,38 @@ class CartActivity : AppCompatActivity(), CartAdapter.OnCartListener {
     }
 
     private fun setupClickListeners() {
-        btnBack.setOnClickListener {
+        btnBack.setOnClickListener { finish() }
+        btnTambahPesanan.setOnClickListener { finish() }
+        btnClear.setOnClickListener { clearAllCart() }
+        btnCheckout.setOnClickListener { processCheckout() }
+    }
+
+    private fun setupBottomNav() {
+        // Highlight tab Keranjang sebagai aktif
+        val activeColor  = android.graphics.Color.parseColor("#2D5A27")
+        val activeColorStateList = ContextCompat.getColorStateList(this, android.R.color.holo_green_dark)
+
+        try {
+            findViewById<ImageView>(R.id.iconCart)
+                ?.setColorFilter(activeColor)
+            findViewById<TextView>(R.id.textCart)
+                ?.setTextColor(activeColor)
+        } catch (e: Exception) { /* ignore */ }
+
+        // Navigasi ke tab lain
+        findViewById<LinearLayout>(R.id.navHome)?.setOnClickListener {
+            startActivity(Intent(this, HomeActivity::class.java))
             finish()
         }
-
-        btnTambahPesanan.setOnClickListener {
+        findViewById<LinearLayout>(R.id.navCatalog)?.setOnClickListener {
+            startActivity(Intent(this, CatalogActivity::class.java))
             finish()
         }
-
-        btnClear.setOnClickListener {
-            clearAllCart()
+        findViewById<LinearLayout>(R.id.navProfile)?.setOnClickListener {
+            startActivity(Intent(this, ProfileActivity::class.java))
+            finish()
         }
-
-        btnCheckout.setOnClickListener {
-            processCheckout()
-        }
+        // navCart tidak perlu listener karena sudah di halaman ini
     }
 
     private fun loadCart() {
@@ -99,7 +123,6 @@ class CartActivity : AppCompatActivity(), CartAdapter.OnCartListener {
             onSuccess = { items ->
                 cartItems = items
                 cartAdapter.updateData(items)
-
                 btnCheckout.isEnabled = items.isNotEmpty()
                 updateTotal(items)
             },
@@ -111,10 +134,7 @@ class CartActivity : AppCompatActivity(), CartAdapter.OnCartListener {
     }
 
     private fun updateTotal(items: List<CartItem>) {
-        val total = items.sumOf {
-            it.subtotal.toDouble()
-        }
-
+        val total = items.sumOf { it.subtotal.toDouble() }
         val localeID = Locale("in", "ID")
         val fmt = NumberFormat.getCurrencyInstance(localeID)
         val formatted = fmt.format(total).replace("Rp", "Rp ")
@@ -151,9 +171,7 @@ class CartActivity : AppCompatActivity(), CartAdapter.OnCartListener {
     override fun onDeleteItem(id: Int) {
         cartRepository.deleteItem(
             cartId = id,
-            onSuccess = {
-                loadCart()
-            },
+            onSuccess = { loadCart() },
             onError = { msg ->
                 Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
             }
@@ -167,12 +185,7 @@ class CartActivity : AppCompatActivity(), CartAdapter.OnCartListener {
                 cartAdapter.updateData(emptyList())
                 updateTotal(emptyList())
                 btnCheckout.isEnabled = false
-
-                Toast.makeText(
-                    this,
-                    "Keranjang dikosongkan",
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(this, "Keranjang dikosongkan", Toast.LENGTH_SHORT).show()
             },
             onError = { msg ->
                 Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
@@ -182,22 +195,14 @@ class CartActivity : AppCompatActivity(), CartAdapter.OnCartListener {
 
     private fun processCheckout() {
         if (cartItems.isEmpty()) {
-            Toast.makeText(
-                this,
-                "Keranjang masih kosong!",
-                Toast.LENGTH_SHORT
-            ).show()
+            Toast.makeText(this, "Keranjang masih kosong!", Toast.LENGTH_SHORT).show()
             return
         }
 
         val authToken = sessionManager.fetchAuthToken()
 
         if (authToken.isNullOrEmpty()) {
-            Toast.makeText(
-                this,
-                "Token tidak ditemukan, silakan login ulang",
-                Toast.LENGTH_SHORT
-            ).show()
+            Toast.makeText(this, "Token tidak ditemukan, silakan login ulang", Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -208,74 +213,42 @@ class CartActivity : AppCompatActivity(), CartAdapter.OnCartListener {
 
         ApiClient.instance.checkoutCart(token).enqueue(object : Callback<CheckoutResponse> {
 
-            override fun onResponse(
-                call: Call<CheckoutResponse>,
-                response: Response<CheckoutResponse>
-            ) {
+            override fun onResponse(call: Call<CheckoutResponse>, response: Response<CheckoutResponse>) {
                 btnCheckout.isEnabled = true
                 btnCheckout.text = "Checkout →"
 
                 if (response.isSuccessful) {
-                    val checkoutResponse = response.body()
-                    val order = checkoutResponse?.order
+                    val order = response.body()?.order
 
                     if (order == null) {
-                        Toast.makeText(
-                            this@CartActivity,
-                            "Data order tidak ditemukan",
-                            Toast.LENGTH_LONG
-                        ).show()
+                        Toast.makeText(this@CartActivity, "Data order tidak ditemukan", Toast.LENGTH_LONG).show()
                         return
                     }
 
-                    val totalAmount = cartItems.sumOf {
-                        it.subtotal.toDouble()
-                    }
-
+                    val totalAmount = cartItems.sumOf { it.subtotal.toDouble() }
                     val itemsSummary = cartItems.joinToString("\n") { item ->
-                        val productName = item.product?.name ?: "Produk"
-                        "$productName x${item.quantity}"
+                        "${item.product?.name ?: "Produk"} x${item.quantity}"
                     }
 
-                    Toast.makeText(
-                        this@CartActivity,
-                        "Pesanan berhasil dibuat!",
-                        Toast.LENGTH_LONG
-                    ).show()
+                    Toast.makeText(this@CartActivity, "Pesanan berhasil dibuat!", Toast.LENGTH_LONG).show()
 
-                    val intent = Intent(
-                        this@CartActivity,
-                        PaymentActivity::class.java
-                    ).apply {
+                    startActivity(Intent(this@CartActivity, PaymentActivity::class.java).apply {
                         putExtra("EXTRA_ORDER_ID", order.id)
                         putExtra("EXTRA_TOTAL_AMOUNT", totalAmount)
                         putExtra("EXTRA_PAYMENT_METHOD", "")
                         putExtra("EXTRA_ITEMS_SUMMARY", itemsSummary)
-                    }
-
-                    startActivity(intent)
+                    })
                     finish()
+
                 } else {
-                    Toast.makeText(
-                        this@CartActivity,
-                        "Gagal checkout: ${response.code()}",
-                        Toast.LENGTH_LONG
-                    ).show()
+                    Toast.makeText(this@CartActivity, "Gagal checkout: ${response.code()}", Toast.LENGTH_LONG).show()
                 }
             }
 
-            override fun onFailure(
-                call: Call<CheckoutResponse>,
-                t: Throwable
-            ) {
+            override fun onFailure(call: Call<CheckoutResponse>, t: Throwable) {
                 btnCheckout.isEnabled = true
                 btnCheckout.text = "Checkout →"
-
-                Toast.makeText(
-                    this@CartActivity,
-                    "Koneksi bermasalah: ${t.message}",
-                    Toast.LENGTH_LONG
-                ).show()
+                Toast.makeText(this@CartActivity, "Koneksi bermasalah: ${t.message}", Toast.LENGTH_LONG).show()
             }
         })
     }

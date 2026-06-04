@@ -17,6 +17,7 @@ import com.project.matchone.ui.auth.LoginActivity
 import com.project.matchone.ui.checkout.CartActivity
 import com.project.matchone.ui.main.CatalogActivity
 import com.project.matchone.ui.main.HomeActivity
+import com.project.matchone.ui.main.WebViewActivity
 import com.project.matchone.utils.SessionManager
 import retrofit2.Call
 import retrofit2.Callback
@@ -67,10 +68,19 @@ class ProfileActivity : AppCompatActivity() {
 
         // --- INFORMASI ---
         itemKebijakanPrivasi.setOnClickListener {
-            Toast.makeText(this, "Kebijakan Privasi", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, WebViewActivity::class.java).apply {
+                putExtra("TITLE", "Kebijakan Privasi")
+                putExtra("URL", "privacy")
+            }
+            startActivity(intent)
         }
+
         itemBantuan.setOnClickListener {
-            Toast.makeText(this, "Pusat Bantuan", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, WebViewActivity::class.java).apply {
+                putExtra("TITLE", "Pusat Bantuan")
+                putExtra("URL", "help")
+            }
+            startActivity(intent)
         }
 
         // --- LOGOUT ---
@@ -82,6 +92,7 @@ class ProfileActivity : AppCompatActivity() {
                 .setNegativeButton("Batal", null)
                 .show()
         }
+
         // --- BOTTOM NAV ---
         setupBottomNav()
     }

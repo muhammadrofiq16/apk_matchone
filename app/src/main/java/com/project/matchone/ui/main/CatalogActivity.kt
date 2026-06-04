@@ -2,7 +2,12 @@ package com.project.matchone.ui.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -41,6 +46,11 @@ class CatalogActivity : AppCompatActivity() {
     private lateinit var layoutMiniCart: View
     private lateinit var tvMiniCartCount: TextView
     private lateinit var tvMiniCartTotal: TextView
+    private lateinit var etSearch: EditText
+    private lateinit var btnClearSearch: TextView
+
+    // Simpan semua produk untuk filter lokal
+    private var allProducts: List<ProductModel> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,16 +75,18 @@ class CatalogActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.iconCatalog).setTextColor(android.graphics.Color.parseColor("#37563b"))
         findViewById<TextView>(R.id.textCatalog).setTextColor(android.graphics.Color.parseColor("#37563b"))
 
-        rvCategories = findViewById(R.id.rvCategories)
-        rvProducts   = findViewById(R.id.rvProducts)
-
+        rvCategories     = findViewById(R.id.rvCategories)
+        rvProducts       = findViewById(R.id.rvProducts)
         layoutMiniCart   = findViewById(R.id.layoutMiniCart)
         tvMiniCartCount  = findViewById(R.id.tvMiniCartCount)
         tvMiniCartTotal  = findViewById(R.id.tvMiniCartTotal)
+        etSearch         = findViewById(R.id.etSearch)
+        btnClearSearch   = findViewById(R.id.btnClearSearch)
 
         rvCategories.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         rvProducts.layoutManager   = GridLayoutManager(this, 2)
 
+        setupSearch()
         fetchCategories()
         fetchProducts()
         loadMiniCart()
@@ -83,23 +95,70 @@ class CatalogActivity : AppCompatActivity() {
             startActivity(Intent(this, HomeActivity::class.java))
             finish()
         }
-
         navCatalog.setOnClickListener {
             rvProducts.smoothScrollToPosition(0)
         }
-
         navCart.setOnClickListener {
             startActivity(Intent(this, CartActivity::class.java))
         }
-
-        layoutMiniCart.setOnClickListener {
-            startActivity(Intent(this, CartActivity::class.java))
-        }
-
-        // ✅ FIX: Arahkan ke ProfileActivity langsung
         navProfile.setOnClickListener {
             startActivity(Intent(this, ProfileActivity::class.java))
         }
+        layoutMiniCart.setOnClickListener {
+            startActivity(Intent(this, CartActivity::class.java))
+        }
+    }
+
+    private fun setupSearch() {
+        // Tombol hapus teks (✕)
+        btnClearSearch.setOnClickListener {
+            etSearch.setText("")
+            etSearch.clearFocus()
+            hideKeyboard()
+        }
+
+        // Tampilkan/sembunyikan tombol ✕ sesuai isi teks
+        etSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                val query = s?.toString()?.trim() ?: ""
+                btnClearSearch.visibility = if (query.isNotEmpty()) View.VISIBLE else View.GONE
+                filterProducts(query)
+            }
+        })
+
+        // Tekan tombol "Search" di keyboard
+        etSearch.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                hideKeyboard()
+                true
+            } else false
+        }
+    }
+
+    private fun filterProducts(query: String) {
+        val filtered = if (query.isEmpty()) {
+            allProducts
+        } else {
+            allProducts.filter {
+                it.name.contains(query, ignoreCase = true)
+            }
+        }
+
+        adapterMenu = MenuAdapter(filtered) { product -> addToCart(product) }
+        rvProducts.adapter = adapterMenu
+
+        // Tampilkan pesan jika hasil kosong
+        findViewById<TextView>(R.id.tvProductSectionTitle).text =
+            if (query.isEmpty()) "Menu Kami"
+            else if (filtered.isEmpty()) "Tidak ada hasil untuk \"$query\""
+            else "Hasil: ${filtered.size} menu"
+    }
+
+    private fun hideKeyboard() {
+        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(etSearch.windowToken, 0)
     }
 
     override fun onResume() {
@@ -140,6 +199,8 @@ class CatalogActivity : AppCompatActivity() {
                 if (response.isSuccessful && response.body() != null) {
                     val categories = response.body()!!.categories
                     adapterCategory = CategoryAdapter(categories) { category ->
+                        // Reset search saat pilih kategori
+                        etSearch.setText("")
                         fetchProducts(category.id)
                     }
                     rvCategories.adapter = adapterCategory
@@ -158,9 +219,8 @@ class CatalogActivity : AppCompatActivity() {
         call.enqueue(object : Callback<ProductResponse> {
             override fun onResponse(call: Call<ProductResponse>, response: Response<ProductResponse>) {
                 if (response.isSuccessful && response.body() != null) {
-                    adapterMenu = MenuAdapter(response.body()!!.products) { product ->
-                        addToCart(product)
-                    }
+                    allProducts = response.body()!!.products  // simpan semua produk
+                    adapterMenu = MenuAdapter(allProducts) { product -> addToCart(product) }
                     rvProducts.adapter = adapterMenu
                 }
             }
@@ -188,7 +248,7 @@ class CatalogActivity : AppCompatActivity() {
         val intent = Intent(this, LoginActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
-            overridePendingTransition(R.anim.fade_scale_in, R.anim.fade_scale_out)
+        overridePendingTransition(R.anim.fade_scale_in, R.anim.fade_scale_out)
         finish()
     }
 
