@@ -49,7 +49,6 @@ class CatalogActivity : AppCompatActivity() {
     private lateinit var etSearch: EditText
     private lateinit var btnClearSearch: TextView
 
-    // Simpan semua produk untuk filter lokal
     private var allProducts: List<ProductModel> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,21 +71,24 @@ class CatalogActivity : AppCompatActivity() {
         val navProfile = findViewById<LinearLayout>(R.id.navProfile)
 
         // Highlight tab Catalog aktif
-        findViewById<TextView>(R.id.iconCatalog).setTextColor(android.graphics.Color.parseColor("#37563b"))
-        findViewById<TextView>(R.id.textCatalog).setTextColor(android.graphics.Color.parseColor("#37563b"))
+        try {
+            findViewById<TextView>(R.id.iconCatalog)?.setTextColor(android.graphics.Color.parseColor("#37563b"))
+            findViewById<TextView>(R.id.textCatalog)?.setTextColor(android.graphics.Color.parseColor("#37563b"))
+        } catch (e: Exception) { /* ignore */ }
 
-        rvCategories     = findViewById(R.id.rvCategories)
-        rvProducts       = findViewById(R.id.rvProducts)
-        layoutMiniCart   = findViewById(R.id.layoutMiniCart)
-        tvMiniCartCount  = findViewById(R.id.tvMiniCartCount)
-        tvMiniCartTotal  = findViewById(R.id.tvMiniCartTotal)
-        etSearch         = findViewById(R.id.etSearch)
-        btnClearSearch   = findViewById(R.id.btnClearSearch)
+        rvCategories    = findViewById(R.id.rvCategories)
+        rvProducts      = findViewById(R.id.rvProducts)
+        layoutMiniCart  = findViewById(R.id.layoutMiniCart)
+        tvMiniCartCount = findViewById(R.id.tvMiniCartCount)
+        tvMiniCartTotal = findViewById(R.id.tvMiniCartTotal)
+        etSearch        = findViewById(R.id.etSearch)
+        btnClearSearch  = findViewById(R.id.btnClearSearch)
 
         rvCategories.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         rvProducts.layoutManager   = GridLayoutManager(this, 2)
 
         setupSearch()
+        setupPromoCards()
         fetchCategories()
         fetchProducts()
         loadMiniCart()
@@ -109,15 +111,25 @@ class CatalogActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupPromoCards() {
+        findViewById<LinearLayout>(R.id.cardPromo1)?.setOnClickListener {
+            Toast.makeText(this, "🎉 Promo Hemat 40% sedang berlangsung!", Toast.LENGTH_SHORT).show()
+        }
+        findViewById<LinearLayout>(R.id.cardPromo2)?.setOnClickListener {
+            Toast.makeText(this, "💰 Cashback 60% untuk pembelian pertama!", Toast.LENGTH_SHORT).show()
+        }
+        findViewById<LinearLayout>(R.id.cardPromo3)?.setOnClickListener {
+            Toast.makeText(this, "🎟️ Voucher 50% tersedia di keranjang!", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     private fun setupSearch() {
-        // Tombol hapus teks (✕)
         btnClearSearch.setOnClickListener {
             etSearch.setText("")
             etSearch.clearFocus()
             hideKeyboard()
         }
 
-        // Tampilkan/sembunyikan tombol ✕ sesuai isi teks
         etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
@@ -128,7 +140,6 @@ class CatalogActivity : AppCompatActivity() {
             }
         })
 
-        // Tekan tombol "Search" di keyboard
         etSearch.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 hideKeyboard()
@@ -138,18 +149,12 @@ class CatalogActivity : AppCompatActivity() {
     }
 
     private fun filterProducts(query: String) {
-        val filtered = if (query.isEmpty()) {
-            allProducts
-        } else {
-            allProducts.filter {
-                it.name.contains(query, ignoreCase = true)
-            }
-        }
+        val filtered = if (query.isEmpty()) allProducts
+        else allProducts.filter { it.name.contains(query, ignoreCase = true) }
 
         adapterMenu = MenuAdapter(filtered) { product -> addToCart(product) }
         rvProducts.adapter = adapterMenu
 
-        // Tampilkan pesan jika hasil kosong
         findViewById<TextView>(R.id.tvProductSectionTitle).text =
             if (query.isEmpty()) "Menu Kami"
             else if (filtered.isEmpty()) "Tidak ada hasil untuk \"$query\""
@@ -163,9 +168,7 @@ class CatalogActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (::cartRepository.isInitialized) {
-            loadMiniCart()
-        }
+        if (::cartRepository.isInitialized) loadMiniCart()
     }
 
     private fun loadMiniCart() {
@@ -199,7 +202,6 @@ class CatalogActivity : AppCompatActivity() {
                 if (response.isSuccessful && response.body() != null) {
                     val categories = response.body()!!.categories
                     adapterCategory = CategoryAdapter(categories) { category ->
-                        // Reset search saat pilih kategori
                         etSearch.setText("")
                         fetchProducts(category.id)
                     }
@@ -219,7 +221,7 @@ class CatalogActivity : AppCompatActivity() {
         call.enqueue(object : Callback<ProductResponse> {
             override fun onResponse(call: Call<ProductResponse>, response: Response<ProductResponse>) {
                 if (response.isSuccessful && response.body() != null) {
-                    allProducts = response.body()!!.products  // simpan semua produk
+                    allProducts = response.body()!!.products
                     adapterMenu = MenuAdapter(allProducts) { product -> addToCart(product) }
                     rvProducts.adapter = adapterMenu
                 }
